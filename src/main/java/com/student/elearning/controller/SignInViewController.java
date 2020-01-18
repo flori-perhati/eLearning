@@ -7,14 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class LoginViewController {
+public class SignInViewController {
 
     @Autowired
     UserDao userDao;
 
-    @RequestMapping("/")
+    @RequestMapping("/accounts/sign_in")
     public String loginView(Model model) {
         model.addAttribute("user", userDao.lastUser());
-        return "login_view";
+        return "sign_in_view";
     }
 }
