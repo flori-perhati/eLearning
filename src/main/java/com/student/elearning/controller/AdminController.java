@@ -35,16 +35,16 @@ public class AdminController {
      * @param model type Model used for adding parameters to the view
      * @return admin_view
      */
-    @RequestMapping("/admin_view")
-    public String viewData(Model model) {
-        List<Student> students = studentDao.getStudents();
-        List<Pedagogue> pedagogues = pedagogueDao.getPedagogues();
-        model.addAttribute("myModel", new MyModel());
-        model.addAttribute("faculties", facultyDao.getFaculties());
-        model.addAttribute("students", students);
-        model.addAttribute("pedagogues", pedagogues);
-        return "admin_view";
-    }
+//    @RequestMapping("/admin")
+//    public String viewData(Model model) {
+//        List<Student> students = studentDao.getStudents();
+//        List<Pedagogue> pedagogues = pedagogueDao.getPedagogues();
+//        model.addAttribute("myModel", new MyModel());
+//        model.addAttribute("faculties", facultyDao.getFaculties());
+//        model.addAttribute("students", students);
+//        model.addAttribute("pedagogues", pedagogues);
+//        return "admin";
+//    }
 
     /**
      * Insert new Student to db
