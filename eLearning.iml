@@ -32,6 +32,7 @@
     <orderEntry type="library" name="popper" level="application" />
     <orderEntry type="library" name="jquery-3.4.1" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-annotations-api:9.0.30" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-jdbc:2.2.3.BUILD-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-jdbc:1.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-relational:1.1.4.RELEASE" level="project" />

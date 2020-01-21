@@ -11,17 +11,46 @@
 </head>
     <body>
         <br><br><br><br><br>
-        <form method="post" class="login-block">
+        <div class="login-block">
             <h1>Sign In</h1>
             <label for="username"></label><input type="text" value="" placeholder="Username" id="username" required/>
             <label for="password"></label><input type="password" value="" placeholder="Password" id="password" required/>
             <input type="checkbox" id="box"><label for="box"><b>Remember me</b></label>
-            <button type="submit">Submit</button>
-        </form>
+            <button id="submit-user">Submit</button>
+        </div>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-        <script src="<c:url value="/js/sign_in.js"/>"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="<c:url value="/js/sign_in.js"/>"></script>
+
+        <div>text</div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#login_frm").submit(function(){
+                    $("#msgbox").removeClass().addClass('myinfo').text('Validating Your Login ').fadeIn(1000);
+                    this.timer = setTimeout(function () {
+                        $.ajax({
+                            url: 'check.jsp',
+                            data: 'un='+ $('#login_id').val() +'&pw=' + $('#password').val(),
+                            type: 'post',
+                            success: function(msg){
+                                if(msg != 'ERROR') {                // and direct to the success page
+                                    $("#msgbox").html('Login Verified, Logging in.....').addClass('myinfo').fadeTo(900,1,
+                                        function() {
+                                            document.location='login.jsp?user='+msg;
+                                        });
+                                } else {
+                                    $("#msgbox").fadeTo(200,0.1,function() {
+                                        $(this).html('Sorry, Wrong Combination Of Username And Password.').removeClass().addClass('myerror').fadeTo(900,1);
+                                    });
+                                }
+                            }
+                        });
+                    }, 200);
+                    return false;
+                });
+            });
+        </script>
     </body>
 </html>

@@ -26,24 +26,29 @@ public class SignInController {
         return new ModelAndView("sign_in");
     }
 
-    @RequestMapping(value = "/validateUser", method = RequestMethod.POST)
-    public ModelAndView validateUser(@RequestBody User user, RedirectAttributes redirectAttributes) {
-        User loggedUser = userDao.validateUser(user);
-        if (loggedUser != null) {
-            user.setId(loggedUser.getId());
-            user.setUserStatus(loggedUser.getUserStatus());
-            switch (loggedUser.getUserStatus()) {
-                case "admin":
-                    return new ModelAndView("admin");
-                case "pedagogue":
-                    redirectAttributes.addFlashAttribute("user", user);
-                    return new ModelAndView("pedagogue_view");
-                case "student":
-                    return new ModelAndView("student_view");
-            }
-        }
-        return new ModelAndView("sign_in");
+    @RequestMapping("/validateUser")
+    public ModelAndView validateUser(Model model) {
+        return new ModelAndView("redirect:/admin");
     }
+
+//    @RequestMapping(value = "/validateUser", method = RequestMethod.POST)
+//    public ModelAndView validateUser(@RequestBody User user, RedirectAttributes redirectAttributes) {
+//        User loggedUser = userDao.validateUser(user);
+//        if (loggedUser != null) {
+//            user.setId(loggedUser.getId());
+//            user.setUserStatus(loggedUser.getUserStatus());
+//            switch (loggedUser.getUserStatus()) {
+//                case "admin":
+//                    return new ModelAndView("admin");
+//                case "pedagogue":
+//                    redirectAttributes.addFlashAttribute("user", user);
+//                    return new ModelAndView("pedagogue_view");
+//                case "student":
+//                    return new ModelAndView("student_view");
+//            }
+//        }
+//        return new ModelAndView("sign_in");
+//    }
 
     @RequestMapping("/admin")
     public ModelAndView viewData() {

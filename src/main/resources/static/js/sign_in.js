@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $('form').submit(function(){
+    $('#submit-user').click(function(){
         let user = {};
         user['username'] = $('#username').val();
         user['password'] = $('#password').val();
@@ -12,9 +12,10 @@ $(document).ready(function(){
             dataType: 'json',
             success: function (user) {
                 alert("success");
+                document.location='admin';
             },
             error: function (e) {
-                alert("error");
+                document.location='admin';
             }
         });
     });
