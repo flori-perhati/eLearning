@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -43,8 +44,8 @@ public class UserDao extends JdbcDaoSupport {
     public User validateUser(User user) {
         String sql = "SELECT * FROM users WHERE username = ? AND password = ? COLLATE Latin1_General_CS_AS";
         Object[] params = new Object[] {user.getUsername(), user.getPassword()};
-        User loggedUser = template.queryForObject(sql, params, new UserMapper());
-        return loggedUser;
+        List<User> users = template.query(sql, params, new UserMapper());
+        return users.isEmpty() ? null : users.get(0);
     }
 
     public User lastUser() {

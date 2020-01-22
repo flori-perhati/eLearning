@@ -1,4 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,49 +11,37 @@
 
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/sign_in.css"/>">
+    <style type="text/css">
+        .error {
+            font-size: 12px;
+            font-family: Montserrat, serif;
+            color: red;
+        }
+    </style>
 </head>
     <body>
+        <c:if test="${sessionScope.username != null} && ${sessionScope.username} != ''">
+            <c:redirect url="/admin"/>
+        </c:if>
         <br><br><br><br><br>
-        <div class="login-block">
+        <form:form id="submit-form" class="login-block" method="post" action="/accounts/sign_in/validate" modelAttribute="user">
             <h1>Sign In</h1>
-            <label for="username"></label><input type="text" value="" placeholder="Username" id="username" required/>
-            <label for="password"></label><input type="password" value="" placeholder="Password" id="password" required/>
-            <input type="checkbox" id="box"><label for="box"><b>Remember me</b></label>
-            <button id="submit-user">Submit</button>
-        </div>
+            <small><form:errors cssClass="error" path="username"/></small>
+            <label for="username"></label><form:input type="text" value="" placeholder="Username" id="username" required="" path="username"/>
+            <small><form:errors cssClass="error" path="password"/></small>
+            <label for="password"></label><form:input type="password" value="" placeholder="Password" id="password" required="" path="password"/>
+            <input type="checkbox" id="box" name="remember-me"><label for="box"><b>Remember me</b></label>
+            <button type="submit" id="submit-user">Submit</button>
 
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-        <script type="text/javascript" src="<c:url value="/js/sign_in.js"/>"></script>
+            <c:if test="${noUser}">
+                <br><br>
+                <div class="error">User does not exist!!!</div>
+            </c:if>
+        </form:form>
 
-        <div>text</div>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                $("#login_frm").submit(function(){
-                    $("#msgbox").removeClass().addClass('myinfo').text('Validating Your Login ').fadeIn(1000);
-                    this.timer = setTimeout(function () {
-                        $.ajax({
-                            url: 'check.jsp',
-                            data: 'un='+ $('#login_id').val() +'&pw=' + $('#password').val(),
-                            type: 'post',
-                            success: function(msg){
-                                if(msg != 'ERROR') {                // and direct to the success page
-                                    $("#msgbox").html('Login Verified, Logging in.....').addClass('myinfo').fadeTo(900,1,
-                                        function() {
-                                            document.location='login.jsp?user='+msg;
-                                        });
-                                } else {
-                                    $("#msgbox").fadeTo(200,0.1,function() {
-                                        $(this).html('Sorry, Wrong Combination Of Username And Password.').removeClass().addClass('myerror').fadeTo(900,1);
-                                    });
-                                }
-                            }
-                        });
-                    }, 200);
-                    return false;
-                });
-            });
-        </script>
+<%--        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>--%>
+<%--        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>--%>
+<%--        <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>--%>
+<%--        <script type="text/javascript" src="<c:url value="/js/sign_in.js"/>"></script>--%>
     </body>
 </html>

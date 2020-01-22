@@ -1,5 +1,6 @@
 $(document).ready(function(){
-    $('#submit-user').click(function(){
+    $('#submit-form').submit(function(event){
+        event.preventDefault();
         let user = {};
         user['username'] = $('#username').val();
         user['password'] = $('#password').val();
@@ -7,15 +8,17 @@ $(document).ready(function(){
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "http://localhost:8080/validateUser",
+            url: "/validateUser",
             data: JSON.stringify(user),
             dataType: 'json',
-            success: function (user) {
-                alert("success");
-                document.location='admin';
+            success: function (response) {
+                alert(response);
+                console.log(response);
+                // document.location='admin';
             },
             error: function (e) {
-                document.location='admin';
+                console.log(e);
+                // document.location='admin';
             }
         });
     });

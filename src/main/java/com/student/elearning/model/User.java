@@ -1,11 +1,16 @@
 package com.student.elearning.model;
 
+import javax.validation.constraints.NotEmpty;
+
 public class User {
 
     private long id;
+    @NotEmpty
     private String username;
+    @NotEmpty
     private String password;
     private String userStatus;
+    private boolean rememberMe;
 
     public User() {}
 
@@ -39,5 +44,13 @@ public class User {
 
     public void setUserStatus(String userStatus) {
         this.userStatus = userStatus;
+    }
+
+    public boolean isRememberMe() {
+        return rememberMe;
+    }
+
+    public void setRememberMe(boolean rememberMe) {
+        this.rememberMe = rememberMe;
     }
 }

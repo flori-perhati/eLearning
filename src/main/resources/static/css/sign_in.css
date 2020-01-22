@@ -1,7 +1,7 @@
 body {
     background: url('http://i.imgur.com/Eor57Ae.jpg') no-repeat fixed center center;
     background-size: cover;
-    font-family: Montserrat;
+    font-family: Montserrat, serif;
 }
 
 .login-block {
@@ -30,7 +30,7 @@ body {
     border: 1px solid #ccc;
     margin-bottom: 20px;
     font-size: 14px;
-    font-family: Montserrat;
+    font-family: Montserrat, serif;
     padding: 0 20px 0 50px;
     outline: none;
 }
@@ -70,7 +70,7 @@ body {
     font-weight: bold;
     text-transform: uppercase;
     font-size: 14px;
-    font-family: Montserrat;
+    font-family: Montserrat, serif;
     outline: none;
     cursor: pointer;
 }
@@ -88,7 +88,7 @@ input[type="checkbox"] + label {
     padding-left: 35px;
     margin-bottom: 20px;
     font-size: 14px;
-    font-family: Montserrat;
+    font-family: Montserrat, serif;
     color: #6d7fcc;
     cursor: pointer;
     -webkit-user-select: none;
