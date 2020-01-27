@@ -10,13 +10,15 @@
 
         <!-- Bootstrap CSS CDN -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+        <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
         <!-- Our Custom CSS -->
         <link rel="stylesheet" type="text/css" href="<c:url value="/css/style5.css"/>">
+<%--        <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">--%>
+        <link rel="stylesheet" type="text/css" href="<c:url value="/css/form1.css"/>">
 
         <!-- Font Awesome JS -->
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
-
     </head>
 
     <body>
@@ -24,62 +26,30 @@
         <div class="wrapper">
             <!-- Sidebar Holder -->
             <nav id="sidebar">
-                <div class="sidebar-header">
-                    <h3>Bootstrap Sidebar</h3>
-                </div>
+                <div class="sidebar-header"><h3>eLearning</h3></div>
 
                 <ul class="list-unstyled components">
-                    <p>Dummy Heading</p>
-                    <li class="active">
-                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-                        <ul class="collapse list-unstyled" id="homeSubmenu">
-                            <li>
-                                <a href="#">Home 1</a>
-                            </li>
-                            <li>
-                                <a href="#">Home 2</a>
-                            </li>
-                            <li>
-                                <a href="#">Home 3</a>
-                            </li>
+                    <p>Menu</p>
+                    <li>
+                        <a href="#pedagogueSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pedagogues</a>
+                        <ul class="collapse list-unstyled" id="pedagogueSubmenu">
+                            <li><a id="allPedagogues">All Pedagogues</a></li>
+                            <li><a id="addPedagogue">Add Pedagogue</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a href="#">About</a>
-                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
-                        <ul class="collapse list-unstyled" id="pageSubmenu">
-                            <li>
-                                <a href="#">Page 1</a>
-                            </li>
-                            <li>
-                                <a href="#">Page 2</a>
-                            </li>
-                            <li>
-                                <a href="#">Page 3</a>
-                            </li>
+                        <a href="#studentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Students</a>
+                        <ul class="collapse list-unstyled" id="studentSubmenu">
+                            <li><a onclick="allStudents()" id="allStudents">All Students</a></li>
+                            <li><a onclick="addStudent()" id="addStudent">Add Student</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="#">Portfolio</a>
-                    </li>
-                    <li>
-                        <a href="#">Contact</a>
-                    </li>
-                </ul>
-
-                <ul class="list-unstyled CTAs">
-                    <li>
-                        <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a>
-                    </li>
-                    <li>
-                        <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
-                    </li>
+                    <li><a href="#">Logout</a></li>
                 </ul>
             </nav>
 
             <!-- Page Content Holder -->
             <div id="content">
-
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div class="container-fluid">
 
@@ -94,41 +64,123 @@
 
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="nav navbar-nav ml-auto">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="#">Page</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Page</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Page</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Page</a>
-                                </li>
+                                <li class="nav-item active" id="window-header"></li>
                             </ul>
                         </div>
                     </div>
                 </nav>
 
-                <h2>Collapsible Sidebar Using Bootstrap 4</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div id="no-data" style="color: orangered"></div>
 
-                <div class="line"></div>
+                <table class="table" id="pedagogue-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+                    <thead class="thead-light"><tr>
+                        <th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Faculty</th><th scope="col">Register Date</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Actions</th>
+                    </tr></thead>
+                    <tbody>
+                    <c:forEach var="pedagogue" items="${pedagogues}">
+                        <tr>
+                            <td>${pedagogue.firstName}</td>
+                            <td>${pedagogue.lastName}</td>
+                            <td>${pedagogue.faculty.description}</td>
+                            <td>${pedagogue.registerDate}</td>
+                            <td>${pedagogue.user.username}</td>
+                            <td>${pedagogue.user.password}</td>
+                            <td>
+                                <a href="#" ><i class="fa fa-edit" style="font-size:20px;color:#7386D5;"></i></a>
+                                <a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
 
-                <h2>Lorem Ipsum Dolor</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <table class="table" id="student-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+                    <thead class="thead-light"><tr>
+                        <th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Faculty</th><th scope="col">Register Date</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Actions</th>
+                    </tr></thead>
+                    <tbody>
+                    <c:forEach var="student" items="${students}">
+                        <tr>
+                            <td>${student.firstName}</td>
+                            <td>${student.lastName}</td>
+                            <td>${student.faculty.description}</td>
+                            <td>${student.registerDate}</td>
+                            <td>${student.user.username}</td>
+                            <td>${student.user.password}</td>
+                            <td>
+                                <a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
 
-                <div class="line"></div>
+                <form id="submit-pedagogue" class="login-block" method="post">
+                    <h1>Add Pedagogue</h1>
+                    <table style="width: 100%; margin-top: 10px;">
+                        <tr>
+                            <td>First Name</td>
+                            <td style="padding-left: 10px">Last Name</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 10px"><label for="pedagogue-first-name"></label><input id="pedagogue-first-name" type="text" required/></td>
+                            <td style="padding-left: 10px"><label for="pedagogue-last-name"></label><input id="pedagogue-last-name" type="text" required/></td>
+                        </tr>
+                        <tr>
+                            <td>Birthplace</td>
+                            <td style="padding-left: 10px">Gender</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 10px"><label for="pedagogue-birthplace"></label><input id="pedagogue-birthplace" required/></td>
+                            <td style="padding-left: 10px"><label for="pedagogue-gender"></label><input id="pedagogue-gender" type="text" required/></td>
+                        </tr>
+                        <tr>
+                            <td>Birthdate</td>
+                            <td style="padding-left: 10px">Registration Date</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 10px"><label for="pedagogue-birthdate"></label><input id="pedagogue-birthdate" type="text" onfocus="(this.type='date')" required/></td>
+                            <td style="padding-left: 10px"><label for="pedagogue-registration-date"></label><input id="pedagogue-registration-date" type="text" onfocus="(this.type='date')" required/></td>
+                        </tr>
+                    </table>
+                    <div>Faculty</div>
+                    <label for="pedagogue-faculty"></label><input id="pedagogue-faculty" type="text" required/>
+                    <button type="submit" style="float: right; width: 30%">Submit</button>
+                </form>
 
-                <h2>Lorem Ipsum Dolor</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <form id="submit-student" class="login-block" method="post" action="#">
+                    <h1>Add Student</h1>
+                    <table style="width: 100%; margin-top: 10px;">
+                        <tr>
+                            <td>First Name</td>
+                            <td style="padding-left: 10px">Last Name</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 10px"><label for="student-first-name"></label><input id="student-first-name" type="text" required/></td>
+                            <td style="padding-left: 10px"><label for="student-last-name"></label><input id="student-last-name" type="text" required/></td>
+                        </tr>
+                        <tr>
+                            <td>Birthplace</td>
+                            <td style="padding-left: 10px">Gender</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 10px"><label for="student-birthplace"></label><input id="student-birthplace" type="text" required/></td>
+                            <td style="padding-left: 10px"><label for="student-gender"></label><input id="student-gender" type="text" required/></td>
+                        </tr>
+                        <tr>
+                            <td>Birthdate</td>
+                            <td style="padding-left: 10px">Registration Date</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 10px"><label for="student-birthdate"></label><input id="student-birthdate" type="text" onfocus="(this.type='date')" required/></td>
+                            <td style="padding-left: 10px"><label for="student-registration-date"></label><input id="student-registration-date" type="text" onfocus="(this.type='date')" required/></td>
+                        </tr>
+                    </table>
+                    <div>Faculty</div>
+                    <label for="student-faculty"></label><input id="student-faculty" type="text" required/>
+                    <button type="submit" style="float: right; width: 30%">Submit</button>
+                </form>
 
-                <div class="line"></div>
-
-                <h3>Lorem Ipsum Dolor</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
         </div>
 
@@ -139,15 +191,9 @@
         <!-- Bootstrap JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#sidebarCollapse').on('click', function () {
-                    $('#sidebar').toggleClass('active');
-                    $(this).toggleClass('active');
-                });
-            });
-        </script>
-        <script src="<c:url value="/js/"/>"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+        <script type="text/javascript" src="<c:url value="/js/main.js"/>"></script>
     </body>
-
 </html>

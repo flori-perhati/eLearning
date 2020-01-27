@@ -165,4 +165,45 @@ public class PedagogueDao extends JdbcDaoSupport {
             }
         });
     }
+
+    public Pedagogue getLastPedagogue(){
+        String sql = "SELECT TOP 1 p.id, p.user_id, p.faculty_id, p.first_name, p.last_name, p.register_date, " +
+                "u.username, u.password, u.user_status, f.description " +
+                "FROM pedagogue p " +
+                "LEFT JOIN users u ON u.id = p.user_id " +
+                "LEFT JOIN faculty f ON f.id = p.faculty_id " +
+                "ORDER BY p.id DESC";
+
+        return template.query(sql, new ResultSetExtractor<List<Pedagogue>>() {
+            public List<Pedagogue> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                List<Pedagogue> pedagogues = new ArrayList<Pedagogue>();
+                while(resultSet.next()) {
+                    Pedagogue pedagogue = new Pedagogue();
+                    Faculty faculty = new Faculty();
+                    User user = new User();
+
+                    pedagogue.setId(resultSet.getInt("id"));
+                    pedagogue.setUserId(resultSet.getInt("user_id"));
+                    pedagogue.setFacultyId(resultSet.getInt("faculty_id"));
+                    pedagogue.setFirstName(resultSet.getString("first_name"));
+                    pedagogue.setLastName(resultSet.getString("last_name"));
+                    pedagogue.setRegisterDate(resultSet.getString("register_date"));
+
+                    user.setId(resultSet.getInt("user_id"));
+                    user.setUsername(resultSet.getString("username"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setUserStatus(resultSet.getString("user_status"));
+
+                    faculty.setId(resultSet.getInt("faculty_id"));
+                    faculty.setDescription(resultSet.getString("description"));
+
+                    pedagogue.setFaculty(faculty);
+                    pedagogue.setUser(user);
+
+                    pedagogues.add(pedagogue);
+                }
+                return pedagogues;
+            }
+        }).get(0);
+    }
 }

@@ -34,6 +34,7 @@ public class SignInController {
                 user.setId(loggedUser.getId());
                 user.setUserStatus(loggedUser.getUserStatus());
                 if (rememberMe) {
+                    session.setAttribute("user_id", user.getId());
                     session.setAttribute("username", user.getUsername());
                     session.setAttribute("password", user.getPassword());
                     session.setAttribute("user_status", user.getUserStatus());
@@ -41,20 +42,15 @@ public class SignInController {
                 }
                 return "redirect:/admin";
             } else
-                return "redirect:/accounts/sign_in/user_do_not_exist";
+                return "redirect:/accounts/sign_in/user_does_not_exist";
         }
     }
 
-    @RequestMapping("/accounts/sign_in/user_do_not_exist")
+    @RequestMapping("/accounts/sign_in/user_does_not_exist")
     public String noUser(Model model) {
         model.addAttribute("noUser", true);
         model.addAttribute("user", new User());
         return "sign_in";
-    }
-
-    @RequestMapping("/admin")
-    public String viewData() {
-        return "admin";
     }
 
 //    @ResponseBody

@@ -50,12 +50,14 @@ public class UserDao extends JdbcDaoSupport {
 
     public User lastUser() {
         String sql = "SELECT TOP 1 * FROM users ORDER BY id DESC";
-        return template.queryForObject(sql, new UserMapper());
+        List<User> users = template.query(sql, new UserMapper());
+        return users.isEmpty() ? null : users.get(0);
     }
 
     public User getUserById(long id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         Object[] params = new Object[] {id};
-        return template.queryForObject(sql, params, new UserMapper());
+        List<User> users = template.query(sql, params, new UserMapper());
+        return users.isEmpty() ? null : users.get(0);
     }
 }
