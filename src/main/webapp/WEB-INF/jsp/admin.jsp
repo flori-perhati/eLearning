@@ -6,13 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        <title>Collapsible sidebar using Bootstrap 4</title>
+        <title>eLearning - Admin</title>
 
         <!-- Bootstrap CSS CDN -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
         <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
         <!-- Our Custom CSS -->
-        <link rel="stylesheet" type="text/css" href="<c:url value="/css/style5.css"/>">
+        <link rel="stylesheet" type="text/css" href="<c:url value="/css/main.css"/>">
 <%--        <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">--%>
         <link rel="stylesheet" type="text/css" href="<c:url value="/css/form1.css"/>">
 
@@ -40,8 +40,8 @@
                     <li>
                         <a href="#studentSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Students</a>
                         <ul class="collapse list-unstyled" id="studentSubmenu">
-                            <li><a onclick="allStudents()" id="allStudents">All Students</a></li>
-                            <li><a onclick="addStudent()" id="addStudent">Add Student</a></li>
+                            <li><a id="allStudents">All Students</a></li>
+                            <li><a id="addStudent">Add Student</a></li>
                         </ul>
                     </li>
                     <li><a href="#">Logout</a></li>
@@ -61,10 +61,10 @@
                         <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="fas fa-align-justify"></i>
                         </button>
-
+                        <div id="window-header" style="padding-left: 20px"></div>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="nav navbar-nav ml-auto">
-                                <li class="nav-item active" id="window-header"></li>
+                                <li class="nav-item"><a class="nav-link" id="logout">Logout</a></li>
                             </ul>
                         </div>
                     </div>
@@ -194,6 +194,6 @@
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-        <script type="text/javascript" src="<c:url value="/js/main.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/js/admin.js"/>"></script>
     </body>
 </html>

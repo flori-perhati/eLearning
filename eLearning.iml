@@ -36,6 +36,13 @@
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="jquery-3.4.1" level="application" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="solid" level="application" />
+    <orderEntry type="library" name="fontawesome" level="application" />
+    <orderEntry type="library" name="jquery-3.3.1.slim" level="application" />
+    <orderEntry type="library" name="popper" level="application" />
+    <orderEntry type="library" name="font-awesome" level="application" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-jdbc:2.2.3.BUILD-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-jdbc:1.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-relational:1.1.4.RELEASE" level="project" />
@@ -119,11 +126,5 @@
     <orderEntry type="library" name="Maven: org.webjars:bootstrap:3.3.6" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:bootstrap-datepicker:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:jquery:1.9.1" level="project" />
-    <orderEntry type="library" name="bootstrap" level="application" />
-    <orderEntry type="library" name="solid" level="application" />
-    <orderEntry type="library" name="fontawesome" level="application" />
-    <orderEntry type="library" name="jquery-3.3.1.slim" level="application" />
-    <orderEntry type="library" name="popper" level="application" />
-    <orderEntry type="library" name="font-awesome" level="application" />
   </component>
 </module>

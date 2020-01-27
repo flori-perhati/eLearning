@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,25 @@ public class PedagogueController {
         model.addAttribute("students", new ArrayList<>());
         model.addAttribute("questions", new ArrayList<>());
         return "pedagogue_view";
+    }
+
+    @RequestMapping("/pedagogue")
+    public String pedagogue(Model model) {
+//        long userId = (long) session.getAttribute("user_id");
+        long userId = 2;
+        Pedagogue pedagogue = pedagogueDao.pedagogueByUserId(userId);
+        List<String> questionTypes = new ArrayList<>();
+        questionTypes.add("Yes/No");
+        questionTypes.add("Single Choice");
+        questionTypes.add("Multiple Choice");
+
+        model.addAttribute("pedagogue", pedagogue);
+        model.addAttribute("questionTypes", questionTypes);
+        model.addAttribute("courses", courseDao.getCoursesByPedagogueId(pedagogue.getId()));
+        model.addAttribute("exams", examDao.examByPedagogue(pedagogue.getId()));
+        model.addAttribute("students", new ArrayList<>());
+        model.addAttribute("questions", new ArrayList<>());
+        return "pedagogue";
     }
 
     /**
