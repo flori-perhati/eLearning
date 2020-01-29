@@ -30,8 +30,7 @@
 
         <ul class="list-unstyled components">
             <p>Menu</p>
-            <li><a href="#">Course</a></li>
-            <li><a href="#">Student</a></li>
+            <li><a id="allCourses">Course</a></li>
             <li>
                 <a href="#examSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Exam</a>
                 <ul class="collapse list-unstyled" id="examSubmenu">
@@ -75,46 +74,57 @@
         <div id="no-data" style="color: orangered"></div>
 
         <form id="pedagogue-profile" class="login-block" method="post">
-            <div><h1 style="display: inline">Profile Data</h1> <i class="fa fa-edit" style="display: inline;font-size:20px;color:#7386D5;float: right"></i></div>
+            <div><h1 style="display: inline">Profile Data</h1> <i id="enable-profile-edit" class="fa fa-edit" style="display: inline;font-size:20px;color:#7386D5;float: right"></i></div>
             <table style="width: 100%; margin-top: 10px;">
                 <tr>
                     <td>First Name</td>
                     <td style="padding-left: 10px">Last Name</td>
                 </tr>
                 <tr>
-                    <td style="padding-right: 10px"><label for="pedagogue-first-name"></label><input value="${pedagogue.firstName}" id="pedagogue-first-name" type="text" required disabled/></td>
-                    <td style="padding-left: 10px"><label for="pedagogue-last-name"></label><input value="${pedagogue.lastName}" id="pedagogue-last-name" type="text" required disabled/></td>
+                    <td style="padding-right: 10px"><label for="pedagogue-first-name"></label><input value="${pedagogue.firstName}" id="pedagogue-first-name" type="text" required/></td>
+                    <td style="padding-left: 10px"><label for="pedagogue-last-name"></label><input value="${pedagogue.lastName}" id="pedagogue-last-name" type="text" required/></td>
                 </tr>
                 <tr>
                     <td>Birthplace</td>
-                    <td style="padding-left: 10px">Gender</td>
+                    <td style="padding-left: 10px">Birthdate</td>
                 </tr>
                 <tr>
-                    <td style="padding-right: 10px"><label for="pedagogue-birthplace"></label><input id="pedagogue-birthplace" required disabled/></td>
-                    <td style="padding-left: 10px"><label for="pedagogue-gender"></label><input id="pedagogue-gender" type="text" required disabled/></td>
+                    <td style="padding-right: 10px"><label for="pedagogue-birthplace"></label><input id="pedagogue-birthplace" required/></td>
+                    <td style="padding-left: 10px"><label for="pedagogue-birthdate"></label><input id="pedagogue-birthdate" type="text" onfocus="(this.type='date')" required/></td>
+<%--                    <td style="padding-left: 10px"><label for="pedagogue-gender"></label><input id="pedagogue-gender" type="text" required disabled/></td>--%>
                 </tr>
                 <tr>
-                    <td>Birthdate</td>
-                    <td style="padding-left: 10px">Registration Date</td>
+                    <td>Gender</td>
                 </tr>
                 <tr>
-                    <td style="padding-right: 10px"><label for="pedagogue-birthdate"></label><input id="pedagogue-birthdate" type="text" onfocus="(this.type='date')" required disabled/></td>
-                    <td style="padding-left: 10px"><label for="pedagogue-registration-date"></label><input value="${pedagogue.registerDate}" id="pedagogue-registration-date" type="text" onfocus="(this.type='date')" required disabled/></td>
+                    <td style="padding-left: 10px"><label for="pedagogue-gender"></label><input id="pedagogue-gender" type="text" required/></td>
+                </tr>
+                <tr>
+                    <td>Username</td>
+                    <td style="padding-left: 10px">Password</td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 10px"><label for="pedagogue-username"></label><input value="${pedagogue.user.username}" id="pedagogue-username" type="text" required/></td>
+                    <td style="padding-left: 10px"><label for="pedagogue-password"></label><input value="${pedagogue.user.password}" id="pedagogue-password" type="text" required/></td>
                 </tr>
             </table>
-            <div>Faculty</div>
-            <label for="pedagogue-faculty"></label><input value="${pedagogue.faculty.description}" id="pedagogue-faculty" type="text" required disabled/>
-            <button type="submit" style="float: right; width: 30%" hidden>Submit</button>
+            <button id="submit-pedagogue" type="submit" style="float: right; width: 30%">Save Changes</button>
         </form>
 
-        <table class="table" id="course-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+        <form id="course-form" class="login-block" method="post" style="width: 100%;margin-bottom: 50px">
+            <h1>Add Course</h1>
+            <label for="course-description"></label><input id="course-description" type="text" placeholder="Description" required/>
+            <button type="submit" style="float: right; width: 20%">Submit</button>
+        </form>
+
+        <table id="course-table" class="table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
             <thead class="thead-light"><tr>
                 <th scope="col">Course Description</th><th scope="col" style="width: min-content">Actions</th>
             </tr></thead>
             <tbody>
             <c:forEach var="course" items="${courses}">
                 <tr>
-                    <td>${course.description}</td>
+                    <td style="width: 85%">${course.description}</td>
                     <td>
                         <a href="#" ><i class="fa fa-edit" style="font-size:20px;color:#7386D5;text-shadow:2px 2px 4px #000000;"></i></a>
                         <a href="#" ><i class="fa fa-plus" style="font-size:20px;color:lightblue;margin-left: 20px;text-shadow:2px 2px 4px #000000;"></i></a>
@@ -125,27 +135,25 @@
             </tbody>
         </table>
 
-        <table class="table" id="student-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
-            <thead class="thead-light"><tr>
-                <th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Faculty</th><th scope="col">Register Date</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Actions</th>
-            </tr></thead>
-            <tbody>
-            <c:forEach var="student" items="${students}">
-                <tr>
-                    <td>${student.firstName}</td>
-                    <td>${student.lastName}</td>
-                    <td>${student.faculty.description}</td>
-                    <td>${student.registerDate}</td>
-                    <td>${student.user.username}</td>
-                    <td>${student.user.password}</td>
-                    <td>
-                        <a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
+        <form id="exam-form" class="login-block" method="post" style="width: 100%;margin-bottom: 60px">
+            <h1>Create Exam</h1>
+            <div>Exam Header</div>
+            <label for="exam-header"></label><textarea id="exam-header" type="text" required></textarea>
+            <div>Exam Description</div>
+            <label for="exam-description"></label><input id="exam-description" type="text" required/>
+            <button type="submit" style="float: right; width: 20%">Submit</button>
+        </form>
 
+        <form id="question-form" class="login-block" method="post" style="width: 100%;margin-bottom: 60px">
+            <h1>Create Question</h1>
+            <div>Question Description</div>
+            <label for="question-description"></label><input id="question-description" type="text" required/>
+            <div>Question Type</div>
+            <input id="radio1" type="radio" name="question-type" value="Yes/No"><label for="radio1"><b> Yes/No</b></label><br>
+            <input id="radio2" type="radio" name="question-type" value="Single Choice"><label for="radio2"><b> Single Choice</b></label><br>
+            <input id="radio3" type="radio" name="question-type" value="MultipleChoice"><label for="radio3"><b> Multiple Choice</b></label><br>
+            <button type="submit" style="float: right; width: 20%">Submit</button>
+        </form>
     </div>
 </div>
 
@@ -159,6 +167,6 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-<script type="text/javascript" src="<c:url value="/js/admin.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/pedagogue.js"/>"></script>
 </body>
 </html>
