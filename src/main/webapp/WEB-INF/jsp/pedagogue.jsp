@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/style5.css"/>">
     <%--        <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">--%>
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/form1.css"/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/radio.css"/>">
 
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -91,14 +92,11 @@
                 <tr>
                     <td style="padding-right: 10px"><label for="pedagogue-birthplace"></label><input id="pedagogue-birthplace" required/></td>
                     <td style="padding-left: 10px"><label for="pedagogue-birthdate"></label><input id="pedagogue-birthdate" type="text" onfocus="(this.type='date')" required/></td>
-<%--                    <td style="padding-left: 10px"><label for="pedagogue-gender"></label><input id="pedagogue-gender" type="text" required disabled/></td>--%>
                 </tr>
-                <tr>
-                    <td>Gender</td>
-                </tr>
-                <tr>
-                    <td style="padding-left: 10px"><label for="pedagogue-gender"></label><input id="pedagogue-gender" type="text" required/></td>
-                </tr>
+            </table>
+            <div>Gender</div>
+            <label for="pedagogue-gender"></label><input id="pedagogue-gender" type="text" required/>
+            <table style="width: 100%; margin-top: 10px;">
                 <tr>
                     <td>Username</td>
                     <td style="padding-left: 10px">Password</td>
@@ -119,7 +117,7 @@
 
         <table id="course-table" class="table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
             <thead class="thead-light"><tr>
-                <th scope="col">Course Description</th><th scope="col" style="width: min-content">Actions</th>
+                <th scope="col">Course Description</th><th scope="col">Actions</th>
             </tr></thead>
             <tbody>
             <c:forEach var="course" items="${courses}">
@@ -137,21 +135,36 @@
 
         <form id="exam-form" class="login-block" method="post" style="width: 100%;margin-bottom: 60px">
             <h1>Create Exam</h1>
-            <div>Exam Header</div>
+            <div style="margin-bottom: 10px">Exam Header</div>
             <label for="exam-header"></label><textarea id="exam-header" type="text" required></textarea>
-            <div>Exam Description</div>
+            <div style="margin-bottom: 10px">Exam Description</div>
             <label for="exam-description"></label><input id="exam-description" type="text" required/>
+
+            <table class="table" id="add-questions-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+                <thead class="thead-light"><tr>
+                    <th scope="col">Actions</th><th scope="col">Question</th>
+                </tr></thead>
+                <tbody>
+                <c:forEach var="question" items="${questions}">
+                    <tr>
+                        <td style="width: 15%"><a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a></td>
+                        <td>${question.description}</td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+
             <button type="submit" style="float: right; width: 20%">Submit</button>
         </form>
 
-        <form id="question-form" class="login-block" method="post" style="width: 100%;margin-bottom: 60px">
+        <form id="question-form" class="login-block" method="post" style="width: 75%;margin-bottom: 60px">
             <h1>Create Question</h1>
-            <div>Question Description</div>
+            <div style="margin-bottom: 10px">Question Description</div>
             <label for="question-description"></label><input id="question-description" type="text" required/>
-            <div>Question Type</div>
-            <input id="radio1" type="radio" name="question-type" value="Yes/No"><label for="radio1"><b> Yes/No</b></label><br>
-            <input id="radio2" type="radio" name="question-type" value="Single Choice"><label for="radio2"><b> Single Choice</b></label><br>
-            <input id="radio3" type="radio" name="question-type" value="MultipleChoice"><label for="radio3"><b> Multiple Choice</b></label><br>
+            <div style="margin-bottom: 10px">Question Type</div>
+            <input type="radio" id="radio1" name="question-type"><label for="radio1"><b>Yes/No</b></label>
+            <input type="radio" id="radio2" name="question-type"><label for="radio2"><b>Single Choice</b></label>
+            <input type="radio" id="radio3" name="question-type"><label for="radio3"><b>Multiple Choice</b></label>
             <button type="submit" style="float: right; width: 20%">Submit</button>
         </form>
     </div>

@@ -52,33 +52,3 @@
 .login-block button:hover {
     background: #6d7fcc;
 }
-input[type="radio"] { display: none; }
-
-input[type="radio"] + label {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    font-family: Montserrat, serif;
-    color: #6d7fcc;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
-input[type="radio"] + label:before {
-    content: '';
-    display: block;
-    width: 15px;
-    height: 15px;
-    border: 2px solid #6d7fcc;
-    border-radius: 4px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: .7;
-    -webkit-transition: all .12s, border-color .08s;
-    transition: all .12s, border-color .08s;
-}

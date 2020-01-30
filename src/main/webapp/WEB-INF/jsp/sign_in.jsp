@@ -11,6 +11,7 @@
 
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/sign_in.css"/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/checkbox.css"/>">
     <style type="text/css">
         .error {
             font-size: 12px;
