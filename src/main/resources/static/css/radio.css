@@ -21,7 +21,7 @@ input[type="radio"] + label:before {
     width: 15px;
     height: 15px;
     border: 2px solid #6d7fcc;
-    border-radius: 4px;
+    border-radius: 50%;
     position: absolute;
     left: 0;
     top: 0;

@@ -16,6 +16,7 @@
     <%--        <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">--%>
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/form1.css"/>">
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/radio.css"/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/checkbox.css"/>">
 
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -133,12 +134,12 @@
             </tbody>
         </table>
 
-        <form id="exam-form" class="login-block" method="post" style="width: 100%;margin-bottom: 60px">
+        <form id="exam-form" class="login-block" method="post" style="width: 75%;margin-bottom: 60px">
             <h1>Create Exam</h1>
             <div style="margin-bottom: 10px">Exam Header</div>
             <label for="exam-header"></label><textarea id="exam-header" type="text" required></textarea>
             <div style="margin-bottom: 10px">Exam Description</div>
-            <label for="exam-description"></label><input id="exam-description" type="text" required/>
+            <label for="exam-description"></label><textarea id="exam-description" type="text" required></textarea>
 
             <table class="table" id="add-questions-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
                 <thead class="thead-light"><tr>
@@ -160,11 +161,63 @@
         <form id="question-form" class="login-block" method="post" style="width: 75%;margin-bottom: 60px">
             <h1>Create Question</h1>
             <div style="margin-bottom: 10px">Question Description</div>
-            <label for="question-description"></label><input id="question-description" type="text" required/>
+            <label for="question-description"></label><textarea id="question-description" type="text" required></textarea>
             <div style="margin-bottom: 10px">Question Type</div>
-            <input type="radio" id="radio1" name="question-type"><label for="radio1"><b>Yes/No</b></label>
-            <input type="radio" id="radio2" name="question-type"><label for="radio2"><b>Single Choice</b></label>
-            <input type="radio" id="radio3" name="question-type"><label for="radio3"><b>Multiple Choice</b></label>
+            <input type="radio" id="radio1" name="question-type" value="Yes/No"><label for="radio1"><b>Yes/No</b></label>
+            <input type="radio" id="radio2" name="question-type" value="Single Choice"><label for="radio2"><b>Single Choice</b></label>
+            <input type="radio" id="radio3" name="question-type" value="Multiple Choice"><label for="radio3"><b>Multiple Choice</b></label>
+
+            <div id="answer-label" style="margin-top: 20px; margin-bottom: 10px;">Answers</div>
+
+            <div id="yes/no">
+                <input type="radio" id="r-1" name="question-boolean-value" value="Yes"><label for="r-1"><b>Yes</b></label>
+                <input type="radio" id="r-2" name="question-boolean-value" value="No"><label for="r-2"><b>No</b></label>
+            </div>
+
+            <table id="single-choice-table" style="width: 100%; margin-top: 10px;">
+                <thead><tr>
+                    <th style="padding-bottom: 10px; width: 10%; font-size: 14px; color: #6d7fcc; font-family: Montserrat, serif;">Is Correct</th>
+                    <th style="padding-bottom: 10px; font-size: 14px; color: #6d7fcc; font-family: Montserrat, serif;">Description</th></tr></thead>
+                <tr>
+                    <td style="width: 10%; display: block; "><input type="radio" id="r1" name="question-type"><label for="r1"></label></td>
+                    <td><label for="ra1"></label><textarea id="ra1" type="text" required></textarea></td>
+                </tr>
+                <tr>
+                    <td style="width: 10%; display: block; "><input type="radio" id="r2" name="question-type"><label for="r2"></label></td>
+                    <td><label for="ra2"></label><textarea id="ra2" type="text" required></textarea></td>
+                </tr>
+                <tr>
+                    <td style="width: 10%; display: block; "><input type="radio" id="r3" name="question-type"><label for="r3"></label></td>
+                    <td><label for="ra3"></label><textarea id="ra3" type="text" required></textarea></td>
+                </tr>
+                <tr>
+                    <td style="width: 10%; display: block; "><input type="radio" id="r4" name="question-type"><label for="r4"></label></td>
+                    <td><label for="ra4"></label><textarea id="ra4" type="text" required></textarea></td>
+                </tr>
+            </table>
+
+            <table id="multiple-choice-table" style="width: 100%; margin-top: 10px;">
+                <thead><tr>
+                    <th style="padding-bottom: 10px; width: 10%; font-size: 14px; color: #6d7fcc; font-family: Montserrat, serif;">Is Correct</th>
+                    <th style="padding-bottom: 10px; font-size: 14px; color: #6d7fcc; font-family: Montserrat, serif;">Description</th></tr></thead>
+                <tr>
+                    <td style="width: 10%; display: block; "><input type="checkbox" id="ch1" name="question-type"><label for="ch1"></label></td>
+                    <td><label for="cha1"></label><textarea id="cha1" type="text" required></textarea></td>
+                </tr>
+                <tr>
+                    <td style="width: 10%; display: block; "><input type="checkbox" id="ch2" name="question-type"><label for="ch2"></label></td>
+                    <td><label for="cha2"></label><textarea id="cha2" type="text" required></textarea></td>
+                </tr>
+                <tr>
+                    <td style="width: 10%; display: block; "><input type="checkbox" id="ch3" name="question-type"><label for="ch3"></label></td>
+                    <td><label for="cha3"></label><textarea id="cha3" type="text" required></textarea></td>
+                </tr>
+                <tr>
+                    <td style="width: 10%; display: block; "><input type="checkbox" id="ch4" name="question-type"><label for="ch4"></label></td>
+                    <td><label for="cha4"></label><textarea id="cha4" type="text" required></textarea></td>
+                </tr>
+            </table>
+
             <button type="submit" style="float: right; width: 20%">Submit</button>
         </form>
     </div>

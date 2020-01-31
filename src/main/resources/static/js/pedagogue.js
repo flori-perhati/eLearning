@@ -1,10 +1,16 @@
 $(document).ready(function () {
+    let header = $('#window-header');
+
     let pedagogueForm = $('#pedagogue-profile');
     let courseForm = $('#course-form');
-    let courseTable = $('#course-table');
     let examForm = $('#exam-form');
     let questionForm = $('#question-form');
-    let header = $('#window-header');
+
+    let courseTable = $('#course-table');
+    let singleChoiceTable = $('#single-choice-table');
+    let multipleChoiceTable = $('#multiple-choice-table');
+
+    let questionBlock = $('#yes/no');
 
     let firstName = $('#pedagogue-first-name');
     let lastName = $('#pedagogue-last-name');
@@ -19,9 +25,13 @@ $(document).ready(function () {
 
     pedagogueForm.show();
     courseForm.hide();
-    courseTable.hide();
     examForm.hide();
     questionForm.hide();
+
+    courseTable.hide();
+    questionBlock.hide();
+    singleChoiceTable.hide();
+    multipleChoiceTable.hide();
 
     firstName.attr('disabled','disabled');
     lastName.attr('disabled','disabled');
@@ -46,6 +56,34 @@ $(document).ready(function () {
         username.removeAttr('disabled');
         password.removeAttr('disabled');
         submitPedagogue.show();
+    });
+
+    $('input[type=radio]').click(function(){
+        if (this.name === "question-type") {
+            if (this.value === "Yes/No") {
+                document.getElementById("answer-label").hidden = false;
+
+                questionBlock.show();
+                singleChoiceTable.hide();
+                multipleChoiceTable.hide();
+            }
+
+            if (this.value === "Single Choice") {
+                document.getElementById("answer-label").hidden = false;
+
+                questionBlock.hide();
+                singleChoiceTable.show();
+                multipleChoiceTable.hide();
+            }
+
+            if (this.value === "Multiple Choice") {
+                document.getElementById("answer-label").hidden = false;
+
+                questionBlock.hide();
+                singleChoiceTable.hide();
+                multipleChoiceTable.show();
+            }
+        }
     });
 
     $('#profile').click(function () {
