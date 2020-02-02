@@ -1,5 +1,6 @@
 package com.student.elearning.dao;
 
+import com.student.elearning.entity.Faculty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,14 +27,16 @@ public class FacultyDao extends JdbcDaoSupport {
         template = this.getJdbcTemplate();
     }
 
-    public List<String> getFaculties() {
+    public List<Faculty> getFaculties() {
         String sql = "SELECT * FROM faculty";
-
-        return template.query(sql, new ResultSetExtractor<List<String>>() {
-            public List<String> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                List<String> faculties = new ArrayList<>();
+        return template.query(sql, new ResultSetExtractor<List<Faculty>>() {
+            public List<Faculty> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                List<Faculty> faculties = new ArrayList<>();
                 while(resultSet.next()) {
-                    faculties.add(resultSet.getInt("id") + ". " + resultSet.getString("description"));
+                    Faculty faculty = new Faculty();
+                    faculty.setId(resultSet.getInt("id"));
+                    faculty.setDescription(resultSet.getString("description"));
+                    faculties.add(faculty);
                 }
                 return faculties;
             }

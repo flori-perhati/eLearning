@@ -1,6 +1,6 @@
 package com.student.elearning.dao;
 
-import com.student.elearning.model.Course;
+import com.student.elearning.entity.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,9 +1,13 @@
 package com.student.elearning.entity;
 
+import javax.validation.constraints.NotEmpty;
+
 public class User {
 
     private long id;
+    @NotEmpty
     private String username;
+    @NotEmpty
     private String password;
     private String userStatus;
 

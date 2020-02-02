@@ -1,6 +1,6 @@
 package com.student.elearning.mapper;
 
-import com.student.elearning.model.Question;
+import com.student.elearning.entity.Question;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -12,7 +12,7 @@ public class QuestionMapper implements RowMapper<Question> {
         Question question = new Question();
         question.setId(resultSet.getLong("id"));
         question.setPedagogueId(resultSet.getLong("pedagogue_id"));
-        question.setDescription(resultSet.getString("description"));
+        question.setValue(resultSet.getString("value"));
         question.setQuestionType(resultSet.getString("question_type"));
         return question;
     }

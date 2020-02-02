@@ -1,6 +1,6 @@
 package com.student.elearning.mapper;
 
-import com.student.elearning.model.Student;
+import com.student.elearning.entity.Student;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -15,7 +15,10 @@ public class StudentMapper implements RowMapper<Student> {
         student.setFacultyId(resultSet.getLong("faculty_id"));
         student.setFirstName(resultSet.getString("first_name"));
         student.setLastName(resultSet.getString("last_name"));
-        student.setRegisterDate(resultSet.getString("register_date"));
+        student.setGender(resultSet.getString("gender"));
+        student.setBirthdate(resultSet.getDate("birthdate"));
+        student.setRegistrationDate(resultSet.getDate("registration_date"));
+        student.setStatus(resultSet.getInt("status") == 1);
         return student;
     }
 }

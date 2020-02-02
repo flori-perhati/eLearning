@@ -1,9 +1,10 @@
 package com.student.elearning.dao;
 
+import com.student.elearning.entity.Pedagogue;
 import com.student.elearning.mapper.StudentMapper;
-import com.student.elearning.model.Faculty;
-import com.student.elearning.model.Student;
-import com.student.elearning.model.User;
+import com.student.elearning.entity.Faculty;
+import com.student.elearning.entity.Student;
+import com.student.elearning.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,8 +33,8 @@ public class StudentDao extends JdbcDaoSupport {
     }
 
     public boolean insert(Student student) {
-        String sql = "INSERT INTO student (user_id, faculty_id, first_name, last_name, register_date) values (?, ?, ?, ?, ?)";
-        Object[] params = new Object[] {student.getUserId(), student.getFacultyId(), student.getFirstName(), student.getLastName(), student.getRegisterDate()};
+        String sql = "INSERT INTO student (user_id, faculty_id, first_name, last_name, gender, birthdate, registration_date, status) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        Object[] params = new Object[] {student.getUserId(), student.getFacultyId(), student.getFirstName(), student.getLastName(), student.getGender(), student.getBirthdate(), student.getRegistrationDate(), student.getStatus()};
         return template.update(sql, params) == 1;
     }
 
@@ -44,19 +45,26 @@ public class StudentDao extends JdbcDaoSupport {
     }
 
     public boolean update(Student student) {
-        String sql = "UPDATE student SET first_name = ?, last_name = ? WHERE id = ?";
-        Object[] params = new Object[] {student.getFirstName(), student.getLastName(), student.getId()};
+        String sql = "UPDATE student SET first_name = ?, last_name = ?, gender = ?, birthdate = ? WHERE id = ?";
+        Object[] params = new Object[] {student.getFirstName(), student.getLastName(), student.getGender(), student.getBirthdate(), student.getId()};
+        return template.update(sql, params) == 1;
+    }
+
+    public boolean updateStatus(long status, long id) {
+        String sql = "UPDATE student SET status = ? WHERE id = ?";
+        Object[] params = new Object[] {status, id};
         return template.update(sql, params) == 1;
     }
 
     public Student getStudentById(int id) {
         String sql = "SELECT * FROM student WHERE id = ?";
         Object[] params = new Object[] {id};
-        return template.queryForObject(sql, params, new StudentMapper());
+        List<Student> students = template.query(sql, params, new StudentMapper());
+        return students.isEmpty() ? null : students.get(0);
     }
 
     public Student studentByUserId(long userId) {
-        String sql = "SELECT s.id, s.user_id, s.faculty_id, s.first_name, s.last_name, s.register_date, " +
+        String sql = "SELECT s.id, s.user_id, s.faculty_id, s.first_name, s.last_name, s.gender, s.birthdate, s.registration_date, s.status, " +
                 "u.username, u.password, u.user_status, f.description " +
                 "FROM student s " +
                 "LEFT JOIN users u ON u.id = s.user_id " +
@@ -74,7 +82,10 @@ public class StudentDao extends JdbcDaoSupport {
                 student.setFacultyId(resultSet.getInt("faculty_id"));
                 student.setFirstName(resultSet.getString("first_name"));
                 student.setLastName(resultSet.getString("last_name"));
-                student.setRegisterDate(resultSet.getString("register_date"));
+                student.setGender(resultSet.getString("gender"));
+                student.setBirthdate(resultSet.getDate("birthdate"));
+                student.setRegistrationDate(resultSet.getDate("registration_date"));
+                student.setStatus(resultSet.getInt("status") == 1);
 
                 user.setId(resultSet.getInt("user_id"));
                 user.setUsername(resultSet.getString("username"));
@@ -92,8 +103,8 @@ public class StudentDao extends JdbcDaoSupport {
         });
     }
 
-    public Student studentDetailsToEdit(int id) {
-        String sql = "SELECT s.id, s.user_id, s.faculty_id, s.first_name, s.last_name, s.register_date, " +
+    /*public Student studentDetailsToEdit(int id) {
+        String sql = "SELECT s.id, s.user_id, s.faculty_id, s.first_name, s.last_name, s.registration_date, " +
                 "u.username, u.password, u.user_status, f.description " +
                 "FROM student s " +
                 "LEFT JOIN users u ON u.id = s.user_id " +
@@ -111,7 +122,7 @@ public class StudentDao extends JdbcDaoSupport {
                 student.setFacultyId(resultSet.getInt("faculty_id"));
                 student.setFirstName(resultSet.getString("first_name"));
                 student.setLastName(resultSet.getString("last_name"));
-                student.setRegisterDate(resultSet.getString("register_date"));
+                student.setRegistrationDate(resultSet.getDate("registration_date"));
 
                 user.setId(resultSet.getInt("user_id"));
                 user.setUsername(resultSet.getString("username"));
@@ -127,18 +138,19 @@ public class StudentDao extends JdbcDaoSupport {
                 return student;
             }
         });
-    }
+    }*/
 
     public List<Student> getStudents() {
-        String sql = "SELECT s.id, s.user_id, s.faculty_id, s.first_name, s.last_name, s.register_date, " +
+        String sql = "SELECT s.id, s.user_id, s.faculty_id, s.first_name, s.last_name, s.registration_date, " +
                 "u.username, u.password, u.user_status, f.description " +
                 "FROM student s " +
                 "LEFT JOIN users u ON u.id = s.user_id " +
-                "LEFT JOIN faculty f ON f.id = s.faculty_id";
+                "LEFT JOIN faculty f ON f.id = s.faculty_id " +
+                "WHERE s.status = 1";
 
         return template.query(sql, new ResultSetExtractor<List<Student>>() {
             public List<Student> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                List<Student> students = new ArrayList<Student>();
+                List<Student> students = new ArrayList<>();
                 while(resultSet.next()) {
                     Student student = new Student();
                     Faculty faculty = new Faculty();
@@ -149,7 +161,7 @@ public class StudentDao extends JdbcDaoSupport {
                     student.setFacultyId(resultSet.getInt("faculty_id"));
                     student.setFirstName(resultSet.getString("first_name"));
                     student.setLastName(resultSet.getString("last_name"));
-                    student.setRegisterDate(resultSet.getString("register_date"));
+                    student.setRegistrationDate(resultSet.getDate("registration_date"));
 
                     user.setId(resultSet.getInt("user_id"));
                     user.setUsername(resultSet.getString("username"));
@@ -185,7 +197,7 @@ public class StudentDao extends JdbcDaoSupport {
                     student.setFacultyId(resultSet.getInt("faculty_id"));
                     student.setFirstName(resultSet.getString("first_name"));
                     student.setLastName(resultSet.getString("last_name"));
-                    student.setRegisterDate(resultSet.getString("register_date"));
+                    student.setRegistrationDate(resultSet.getDate("registration_date"));
 
                     user.setId(resultSet.getInt("user_id"));
                     user.setUsername(resultSet.getString("username"));
@@ -203,5 +215,48 @@ public class StudentDao extends JdbcDaoSupport {
                 return students;
             }
         });
+    }
+
+    public Student getLastStudent(){
+        String sql = "SELECT TOP 1 s.id, s.user_id, s.faculty_id, s.first_name, s.last_name, s.gender, s.birthdate, s.registration_date, " +
+                "u.username, u.password, u.user_status, f.description " +
+                "FROM student s " +
+                "LEFT JOIN users u ON u.id = s.user_id " +
+                "LEFT JOIN faculty f ON f.id = s.faculty_id " +
+                "ORDER BY s.id DESC";
+
+        return template.query(sql, new ResultSetExtractor<List<Student>>() {
+            public List<Student> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                List<Student> students = new ArrayList<Student>();
+                while(resultSet.next()) {
+                    Student student = new Student();
+                    Faculty faculty = new Faculty();
+                    User user = new User();
+
+                    student.setId(resultSet.getInt("id"));
+                    student.setUserId(resultSet.getInt("user_id"));
+                    student.setFacultyId(resultSet.getInt("faculty_id"));
+                    student.setFirstName(resultSet.getString("first_name"));
+                    student.setLastName(resultSet.getString("last_name"));
+                    student.setGender(resultSet.getString("gender"));
+                    student.setBirthdate(resultSet.getDate("birthdate"));
+                    student.setRegistrationDate(resultSet.getDate("registration_date"));
+
+                    user.setId(resultSet.getInt("user_id"));
+                    user.setUsername(resultSet.getString("username"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setUserStatus(resultSet.getString("user_status"));
+
+                    faculty.setId(resultSet.getInt("faculty_id"));
+                    faculty.setDescription(resultSet.getString("description"));
+
+                    student.setFaculty(faculty);
+                    student.setUser(user);
+
+                    students.add(student);
+                }
+                return students;
+            }
+        }).get(0);
     }
 }

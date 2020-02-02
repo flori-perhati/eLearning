@@ -1,9 +1,11 @@
 package com.student.elearning.dao;
 
+import com.student.elearning.entity.Student;
 import com.student.elearning.mapper.PedagogueMapper;
-import com.student.elearning.model.Faculty;
-import com.student.elearning.model.Pedagogue;
-import com.student.elearning.model.User;
+import com.student.elearning.entity.Faculty;
+import com.student.elearning.entity.Pedagogue;
+import com.student.elearning.entity.User;
+import com.student.elearning.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,8 +34,8 @@ public class PedagogueDao extends JdbcDaoSupport {
     }
 
     public boolean insert(Pedagogue pedagogue) {
-        String sql = "INSERT INTO pedagogue (user_id, faculty_id, first_name, last_name, register_date) values (?, ?, ?, ?, ?)";
-        return template.update(sql, pedagogue.getUserId(), pedagogue.getFacultyId(), pedagogue.getFirstName(), pedagogue.getLastName(), pedagogue.getRegisterDate()) == 1;
+        String sql = "INSERT INTO pedagogue (user_id, faculty_id, first_name, last_name, gender, birthdate, registration_date, status) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        return template.update(sql, pedagogue.getUserId(), pedagogue.getFacultyId(), pedagogue.getFirstName(), pedagogue.getLastName(), pedagogue.getGender(), pedagogue.getBirthdate(), pedagogue.getRegistrationDate(), pedagogue.getStatus()) == 1;
     }
 
     public boolean delete(long pedagogueId) {
@@ -42,18 +44,25 @@ public class PedagogueDao extends JdbcDaoSupport {
     }
 
     public boolean update(Pedagogue pedagogue) {
-        String sql = "UPDATE pedagogue set first_name = ?, last_name = ? WHERE id = ?";
-        return template.update(sql, pedagogue.getFirstName(), pedagogue.getLastName(), pedagogue.getId()) == 1;
+        String sql = "UPDATE pedagogue set first_name = ?, last_name = ?, gender = ?, birthdate = ?  WHERE id = ?";
+        return template.update(sql, pedagogue.getFirstName(), pedagogue.getLastName(), pedagogue.getGender(), pedagogue.getBirthdate(), pedagogue.getId()) == 1;
+    }
+
+    public boolean updateStatus(long status, long id) {
+        String sql = "UPDATE pedagogue SET status = ? WHERE id = ?";
+        Object[] params = new Object[] {status, id};
+        return template.update(sql, params) == 1;
     }
 
     public Pedagogue getPedagogueById(int id) {
         String sql = "SELECT * FROM pedagogue WHERE id = ?";
         Object[] params = new Object[] {id};
-        return template.queryForObject(sql, params, new PedagogueMapper());
+        List<Pedagogue> pedagogues = template.query(sql, params, new PedagogueMapper());
+        return pedagogues.isEmpty() ? null : pedagogues.get(0);
     }
 
     public Pedagogue pedagogueByUserId(long userId){
-        String sql = "SELECT p.id, p.user_id, p.faculty_id, p.first_name, p.last_name, p.register_date, " +
+        String sql = "SELECT p.id, p.user_id, p.faculty_id, p.first_name, p.last_name, p.gender, p.birthdate, p.registration_date, p.status, " +
                 "u.username, u.password, u.user_status, f.description " +
                 "FROM pedagogue p " +
                 "LEFT JOIN users u ON u.id = p.user_id " +
@@ -71,7 +80,10 @@ public class PedagogueDao extends JdbcDaoSupport {
                 pedagogue.setFacultyId(resultSet.getInt("faculty_id"));
                 pedagogue.setFirstName(resultSet.getString("first_name"));
                 pedagogue.setLastName(resultSet.getString("last_name"));
-                pedagogue.setRegisterDate(resultSet.getString("register_date"));
+                pedagogue.setGender(resultSet.getString("gender"));
+                pedagogue.setBirthdate(resultSet.getDate("birthdate"));
+                pedagogue.setRegistrationDate(resultSet.getDate("registration_date"));
+                pedagogue.setStatus(resultSet.getInt("status") == 1);
 
                 user.setId(resultSet.getInt("user_id"));
                 user.setUsername(resultSet.getString("username"));
@@ -89,7 +101,7 @@ public class PedagogueDao extends JdbcDaoSupport {
         });
     }
 
-    public Pedagogue pedagogueDetailsToEdit(int id){
+    /*public Pedagogue pedagogueDetailsToEdit(int id){
         String sql = "SELECT p.id, p.user_id, p.faculty_id, p.first_name, p.last_name, p.register_date, " +
                 "u.username, u.password, u.user_status, f.description " +
                 "FROM pedagogue p " +
@@ -124,14 +136,15 @@ public class PedagogueDao extends JdbcDaoSupport {
                 return pedagogue;
             }
         });
-    }
+    }*/
 
     public List<Pedagogue> getPedagogues(){
-        String sql = "SELECT p.id, p.user_id, p.faculty_id, p.first_name, p.last_name, p.register_date, " +
+        String sql = "SELECT p.id, p.user_id, p.faculty_id, p.first_name, p.last_name, p.gender, p.birthdate, p.registration_date, " +
                 "u.username, u.password, u.user_status, f.description " +
                 "FROM pedagogue p " +
                 "LEFT JOIN users u ON u.id = p.user_id " +
-                "LEFT JOIN faculty f ON f.id = p.faculty_id";
+                "LEFT JOIN faculty f ON f.id = p.faculty_id " +
+                "WHERE p.status = 1";
 
         return template.query(sql, new ResultSetExtractor<List<Pedagogue>>() {
             public List<Pedagogue> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -146,7 +159,9 @@ public class PedagogueDao extends JdbcDaoSupport {
                     pedagogue.setFacultyId(resultSet.getInt("faculty_id"));
                     pedagogue.setFirstName(resultSet.getString("first_name"));
                     pedagogue.setLastName(resultSet.getString("last_name"));
-                    pedagogue.setRegisterDate(resultSet.getString("register_date"));
+                    pedagogue.setGender(resultSet.getString("gender"));
+                    pedagogue.setBirthdate(resultSet.getDate("birthdate"));
+                    pedagogue.setRegistrationDate(resultSet.getDate("registration_date"));
 
                     user.setId(resultSet.getInt("user_id"));
                     user.setUsername(resultSet.getString("username"));
@@ -167,7 +182,7 @@ public class PedagogueDao extends JdbcDaoSupport {
     }
 
     public Pedagogue getLastPedagogue(){
-        String sql = "SELECT TOP 1 p.id, p.user_id, p.faculty_id, p.first_name, p.last_name, p.register_date, " +
+        String sql = "SELECT TOP 1 p.id, p.user_id, p.faculty_id, p.first_name, p.last_name, p.registration_date, " +
                 "u.username, u.password, u.user_status, f.description " +
                 "FROM pedagogue p " +
                 "LEFT JOIN users u ON u.id = p.user_id " +
@@ -187,7 +202,7 @@ public class PedagogueDao extends JdbcDaoSupport {
                     pedagogue.setFacultyId(resultSet.getInt("faculty_id"));
                     pedagogue.setFirstName(resultSet.getString("first_name"));
                     pedagogue.setLastName(resultSet.getString("last_name"));
-                    pedagogue.setRegisterDate(resultSet.getString("register_date"));
+                    pedagogue.setRegistrationDate(resultSet.getDate("registration_date"));
 
                     user.setId(resultSet.getInt("user_id"));
                     user.setUsername(resultSet.getString("username"));

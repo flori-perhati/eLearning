@@ -71,9 +71,12 @@ $(document).ready(function () {
     pedagogueForm.submit(function(event) {
         event.preventDefault();
         let pedagogue = {};
+        pedagogue['facultyId'] = $('#pedagogue-faculty').val();
         pedagogue['firstName'] = $('#pedagogue-first-name').val();
         pedagogue['lastName'] = $('#pedagogue-last-name').val();
-        pedagogue['registerDate'] = $('#pedagogue-registration-date').val();
+        pedagogue['gender'] = $('#pedagogue-gender').val();
+        pedagogue['birthdate'] = $('#pedagogue-birthdate').val();
+        pedagogue['registrationDate'] = $('#pedagogue-registration-date').val();
 
         $.ajax({
             type: "POST",
@@ -87,6 +90,7 @@ $(document).ready(function () {
             else {
                 pedagogueForm.trigger("reset");
                 $('#pedagogue-table tr:last').after(insertPedagogueRow(response));
+                alert("Success!");
             }
         }).fail(function(e) {
             console.log(e);
@@ -96,9 +100,12 @@ $(document).ready(function () {
     studentForm.submit(function(event) {
         event.preventDefault();
         let student = {};
-        student['firstName'] = $('#pedagogue-first-name').val();
-        student['lastName'] = $('#pedagogue-last-name').val();
-        student['registerDate'] = $('#pedagogue-registration-date').val();
+        student['facultyId'] = $('#student-faculty').val();
+        student['firstName'] = $('#student-first-name').val();
+        student['lastName'] = $('#student-last-name').val();
+        student['gender'] = $('#student-gender').val();
+        student['birthdate'] = $('#student-birthdate').val();
+        student['registrationDate'] = $('#student-registration-date').val();
 
         $.ajax({
             type: "POST",
@@ -112,6 +119,7 @@ $(document).ready(function () {
             else {
                 studentForm.trigger("reset");
                 $('#student-table tr:last').after(insertStudentRow(response));
+                alert("Success!");
             }
         }).fail(function(e) {
             console.log(e);
@@ -123,12 +131,11 @@ $(document).ready(function () {
                     '<td>' + pedagogue.firstName +'</td>' +
                     '<td>' + pedagogue.lastName + '</td>' +
                     '<td>' + pedagogue.faculty.description + '</td>' +
-                    '<td>' + pedagogue.registerDate + '</td>' +
+                    '<td>' + pedagogue.registrationDate + '</td>' +
                     '<td>' + pedagogue.user.username + '</td>' +
                     '<td>' + pedagogue.user.password + '</td>' +
                     '<td>' +
-                        '<a href="#" ><i class="fa fa-edit" style="font-size:20px;color:#7386D5;"></i></a>' +
-                        '<a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>' +
+                        '<a href="deletePedagogue/"' + pedagogue.id + '" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>'   +
                     '</td>' +
                     '</tr>';
     }
@@ -142,9 +149,45 @@ $(document).ready(function () {
             '<td>' + student.user.username + '</td>' +
             '<td>' + student.user.password + '</td>' +
             '<td>' +
-            '<a href="#" ><i class="fa fa-edit" style="font-size:20px;color:#7386D5;"></i></a>' +
-            '<a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>' +
+                '<a href="deletePedagogue/"' + student.id + '" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>'   +
             '</td>' +
             '</tr>';
     }
 });
+
+// function deletePedagogue(id) {
+//     $.ajax({
+//         type: "POST",
+//         contentType: "application/json",
+//         url: "/deletePedagogue",
+//         data: JSON.stringify(id),
+//         dataType: 'json'
+//     }).done(function(response){
+//         if (response === "error")
+//             alert(response);
+//         else {
+//             $('#student-table tr:last').after(insertStudentRow(response));
+//         }
+//     }).fail(function(e) {
+//         console.log(e);
+//     });
+// }
+//
+// function deleteStudent(id) {
+//     $.ajax({
+//         type: "POST",
+//         contentType: "application/json",
+//         url: "/saveStudent",
+//         data: JSON.stringify(student),
+//         dataType: 'json'
+//     }).done(function(response){
+//         if (response === "Something went wrong!")
+//             alert(response);
+//         else {
+//             studentForm.trigger("reset");
+//             $('#student-table tr:last').after(insertStudentRow(response));
+//         }
+//     }).fail(function(e) {
+//         console.log(e);
+//     });
+// }

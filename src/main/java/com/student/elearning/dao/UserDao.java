@@ -1,7 +1,8 @@
 package com.student.elearning.dao;
 
+import com.student.elearning.entity.Student;
 import com.student.elearning.mapper.UserMapper;
-import com.student.elearning.model.User;
+import com.student.elearning.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
@@ -41,11 +42,28 @@ public class UserDao extends JdbcDaoSupport {
         return template.update(sql, params) == 1;
     }
 
-    public User validateUser(User user) {
-        String sql = "SELECT * FROM users WHERE username = ? AND password = ? COLLATE Latin1_General_CS_AS";
+    public User validateUser(User user, StudentDao studentDao, PedagogueDao pedagogueDao) {
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ? COLLATE Latin1_General_CS_AS ";
         Object[] params = new Object[] {user.getUsername(), user.getPassword()};
         List<User> users = template.query(sql, params, new UserMapper());
-        return users.isEmpty() ? null : users.get(0);
+        if (users.isEmpty())
+            return null;
+        else {
+            User loggedUser = users.get(0);
+            switch (loggedUser.getUserStatus()) {
+                case "admin":
+                    break;
+                case "student":
+                    if (!studentDao.studentByUserId(loggedUser.getId()).getStatus())
+                        loggedUser = null;
+                    break;
+                case "pedagogue":
+                    if (!pedagogueDao.pedagogueByUserId(loggedUser.getId()).getStatus())
+                        loggedUser = null;
+                    break;
+            }
+            return loggedUser;
+        }
     }
 
     public User lastUser() {

@@ -4,8 +4,8 @@ import com.student.elearning.dao.CourseDao;
 import com.student.elearning.dao.FacultyDao;
 import com.student.elearning.dao.StudentDao;
 import com.student.elearning.dao.UserDao;
-import com.student.elearning.model.Student;
-import com.student.elearning.model.User;
+import com.student.elearning.entity.Student;
+import com.student.elearning.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -65,7 +65,7 @@ public class StudentController {
      */
     @RequestMapping(value="/editStudent/{id}")
     public String editStudent(@PathVariable int id, Model model){
-        model.addAttribute("student", studentDao.studentDetailsToEdit(id));
+//        model.addAttribute("student", studentDao.studentDetailsToEdit(id));
         return "edit_student_view";
     }
 

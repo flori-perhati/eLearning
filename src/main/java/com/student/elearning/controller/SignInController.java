@@ -1,7 +1,9 @@
 package com.student.elearning.controller;
 
+import com.student.elearning.dao.PedagogueDao;
+import com.student.elearning.dao.StudentDao;
 import com.student.elearning.dao.UserDao;
-import com.student.elearning.model.User;
+import com.student.elearning.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,10 @@ public class SignInController {
 
     @Autowired
     UserDao userDao;
+    @Autowired
+    StudentDao studentDao;
+    @Autowired
+    PedagogueDao pedagogueDao;
 
     @RequestMapping(value = "/accounts/sign_in", method = RequestMethod.GET)
     public String loginView(Model model) {
@@ -29,7 +35,7 @@ public class SignInController {
         if (bindingResult.hasErrors()) {
             return "sign_in";
         } else {
-            User loggedUser = userDao.validateUser(user);
+            User loggedUser = userDao.validateUser(user, studentDao, pedagogueDao);
             if (loggedUser != null) {
                 user.setId(loggedUser.getId());
                 user.setUserStatus(loggedUser.getUserStatus());

@@ -21,8 +21,10 @@
     </style>
 </head>
     <body>
-        <c:if test="${sessionScope.username != null} && ${sessionScope.username} != ''">
-            <c:redirect url="/admin"/>
+        <c:if test="${sessionScope.remember_me != null} && ${sessionScope.remember_me}">
+            <c:if test="${sessionScope.user_status != null}">
+                <c:redirect url="/${sessionScope.user_status}"/>
+            </c:if>
         </c:if>
         <br><br><br><br><br>
         <form:form id="submit-form" class="login-block" method="post" action="/accounts/sign_in/validate" modelAttribute="user">

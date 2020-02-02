@@ -10,10 +10,10 @@ public class Pedagogue {
     private long facultyId;
     private String firstName;
     private String lastName;
-    private String birthplace;
     private String gender;
     private Date birthdate;
     private Date registrationDate;
+    private boolean status;
 
     private User user;
     private Faculty faculty;
@@ -59,14 +59,6 @@ public class Pedagogue {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getBirthplace() {
-        return birthplace;
-    }
-
-    public void setBirthplace(String birthplace) {
-        this.birthplace = birthplace;
     }
 
     public String getGender() {
@@ -131,5 +123,13 @@ public class Pedagogue {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

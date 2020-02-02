@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
         <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
         <!-- Our Custom CSS -->
-        <link rel="stylesheet" type="text/css" href="<c:url value="/css/main.css"/>">
+        <link rel="stylesheet" type="text/css" href="<c:url value="/css/style5.css"/>">
 <%--        <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">--%>
         <link rel="stylesheet" type="text/css" href="<c:url value="/css/form1.css"/>">
 
@@ -74,7 +74,7 @@
 
                 <table class="table" id="pedagogue-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
                     <thead class="thead-light"><tr>
-                        <th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Faculty</th><th scope="col">Register Date</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Actions</th>
+                        <th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Faculty</th><th scope="col">Registration Date</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Actions</th>
                     </tr></thead>
                     <tbody>
                     <c:forEach var="pedagogue" items="${pedagogues}">
@@ -82,12 +82,11 @@
                             <td>${pedagogue.firstName}</td>
                             <td>${pedagogue.lastName}</td>
                             <td>${pedagogue.faculty.description}</td>
-                            <td>${pedagogue.registerDate}</td>
+                            <td>${pedagogue.registrationDate}</td>
                             <td>${pedagogue.user.username}</td>
                             <td>${pedagogue.user.password}</td>
                             <td>
-                                <a href="#" ><i class="fa fa-edit" style="font-size:20px;color:#7386D5;"></i></a>
-                                <a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
+                                <a href='deletePedagogue/${pedagogue.id}' ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -96,7 +95,7 @@
 
                 <table class="table" id="student-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
                     <thead class="thead-light"><tr>
-                        <th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Faculty</th><th scope="col">Register Date</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Actions</th>
+                        <th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Faculty</th><th scope="col">Registration Date</th><th scope="col">Username</th><th scope="col">Password</th><th scope="col">Actions</th>
                     </tr></thead>
                     <tbody>
                     <c:forEach var="student" items="${students}">
@@ -104,11 +103,11 @@
                             <td>${student.firstName}</td>
                             <td>${student.lastName}</td>
                             <td>${student.faculty.description}</td>
-                            <td>${student.registerDate}</td>
+                            <td>${student.registrationDate}</td>
                             <td>${student.user.username}</td>
                             <td>${student.user.password}</td>
                             <td>
-                                <a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
+                                <a href='/deleteStudent/${student.id}' ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -119,32 +118,41 @@
                     <h1>Add Pedagogue</h1>
                     <table style="width: 100%; margin-top: 10px;">
                         <tr>
-                            <td>First Name</td>
-                            <td style="padding-left: 10px">Last Name</td>
+                            <td style="width: 50%">First Name</td>
+                            <td style="padding-left: 10px; width: 50%">Last Name</td>
                         </tr>
                         <tr>
                             <td style="padding-right: 10px"><label for="pedagogue-first-name"></label><input id="pedagogue-first-name" type="text" required/></td>
                             <td style="padding-left: 10px"><label for="pedagogue-last-name"></label><input id="pedagogue-last-name" type="text" required/></td>
                         </tr>
                         <tr>
-                            <td>Birthplace</td>
-                            <td style="padding-left: 10px">Gender</td>
+                            <td>Gender</td>
+                            <td style="padding-left: 10px">Birthdate</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 10px"><label for="pedagogue-birthplace"></label><input id="pedagogue-birthplace" required/></td>
-                            <td style="padding-left: 10px"><label for="pedagogue-gender"></label><input id="pedagogue-gender" type="text" required/></td>
+                            <td style="padding-right: 10px;">
+                                <label for="pedagogue-gender"></label><select id="pedagogue-gender" required>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </td>
+                            <td style="padding-left: 10px"><label for="pedagogue-birthdate"></label><input id="pedagogue-birthdate" type="text" onfocus="(this.type='date')" required/></td>
                         </tr>
                         <tr>
-                            <td>Birthdate</td>
+                            <td>Faculty</td>
                             <td style="padding-left: 10px">Registration Date</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 10px"><label for="pedagogue-birthdate"></label><input id="pedagogue-birthdate" type="text" onfocus="(this.type='date')" required/></td>
+                            <td style="padding-right: 10px">
+                                <label for="pedagogue-faculty"></label><select id="pedagogue-faculty" required>
+                                <c:forEach var="faculty" items="${faculties}">
+                                    <option value="${faculty.id}">${faculty.description}</option>
+                                </c:forEach>
+                            </select>
+                            </td>
                             <td style="padding-left: 10px"><label for="pedagogue-registration-date"></label><input id="pedagogue-registration-date" type="text" onfocus="(this.type='date')" required/></td>
                         </tr>
                     </table>
-                    <div>Faculty</div>
-                    <label for="pedagogue-faculty"></label><input id="pedagogue-faculty" type="text" required/>
                     <button type="submit" style="float: right; width: 30%">Submit</button>
                 </form>
 
@@ -152,32 +160,41 @@
                     <h1>Add Student</h1>
                     <table style="width: 100%; margin-top: 10px;">
                         <tr>
-                            <td>First Name</td>
-                            <td style="padding-left: 10px">Last Name</td>
+                            <td style="width: 50%;">First Name</td>
+                            <td style="padding-left: 10px; width: 50%">Last Name</td>
                         </tr>
                         <tr>
                             <td style="padding-right: 10px"><label for="student-first-name"></label><input id="student-first-name" type="text" required/></td>
                             <td style="padding-left: 10px"><label for="student-last-name"></label><input id="student-last-name" type="text" required/></td>
                         </tr>
                         <tr>
-                            <td>Birthplace</td>
-                            <td style="padding-left: 10px">Gender</td>
+                            <td>Gender</td>
+                            <td style="padding-left: 10px">Birthdate</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 10px"><label for="student-birthplace"></label><input id="student-birthplace" type="text" required/></td>
-                            <td style="padding-left: 10px"><label for="student-gender"></label><input id="student-gender" type="text" required/></td>
+                            <td style="padding-right: 10px;">
+                                <label for="student-gender"></label><select id="student-gender" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            </td>
+                            <td style="padding-left: 10px"><label for="student-birthdate"></label><input id="student-birthdate" type="text" onfocus="(this.type='date')" required/></td>
                         </tr>
                         <tr>
-                            <td>Birthdate</td>
+                            <td>Faculty</td>
                             <td style="padding-left: 10px">Registration Date</td>
                         </tr>
                         <tr>
-                            <td style="padding-right: 10px"><label for="student-birthdate"></label><input id="student-birthdate" type="text" onfocus="(this.type='date')" required/></td>
+                            <td style="padding-right: 10px">
+                                <label for="student-faculty"></label><select id="student-faculty" required>
+                                <c:forEach var="faculty" items="${faculties}">
+                                    <option value="${faculty.id}">${faculty.description}</option>
+                                </c:forEach>
+                            </select>
+                            </td>
                             <td style="padding-left: 10px"><label for="student-registration-date"></label><input id="student-registration-date" type="text" onfocus="(this.type='date')" required/></td>
                         </tr>
                     </table>
-                    <div>Faculty</div>
-                    <label for="student-faculty"></label><input id="student-faculty" type="text" required/>
                     <button type="submit" style="float: right; width: 30%">Submit</button>
                 </form>
 

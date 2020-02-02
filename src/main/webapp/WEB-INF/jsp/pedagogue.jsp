@@ -76,7 +76,7 @@
         <div id="no-data" style="color: orangered"></div>
 
         <form id="pedagogue-profile" class="login-block" method="post">
-            <div><h1 style="display: inline">Profile Data</h1> <i id="enable-profile-edit" class="fa fa-edit" style="display: inline;font-size:20px;color:#7386D5;float: right"></i></div>
+            <div><h1 style="display: inline">Profile Data</h1> <a id="enable-profile-edit"><i class="fa fa-edit" style="display: inline;font-size:20px;color:#7386D5;float: right"></i></a></div>
             <table style="width: 100%; margin-top: 10px;">
                 <tr>
                     <td>First Name</td>
@@ -87,17 +87,13 @@
                     <td style="padding-left: 10px"><label for="pedagogue-last-name"></label><input value="${pedagogue.lastName}" id="pedagogue-last-name" type="text" required/></td>
                 </tr>
                 <tr>
-                    <td>Birthplace</td>
+                    <td>Gender</td>
                     <td style="padding-left: 10px">Birthdate</td>
                 </tr>
                 <tr>
-                    <td style="padding-right: 10px"><label for="pedagogue-birthplace"></label><input id="pedagogue-birthplace" required/></td>
-                    <td style="padding-left: 10px"><label for="pedagogue-birthdate"></label><input id="pedagogue-birthdate" type="text" onfocus="(this.type='date')" required/></td>
+                    <td style="padding-right: 10px"><label for="pedagogue-gender"></label><input value="${pedagogue.gender}" id="pedagogue-gender" type="text" required/></td>
+                    <td style="padding-left: 10px"><label for="pedagogue-birthdate"></label><input value="${pedagogue.birthdate}" id="pedagogue-birthdate" type="text" onfocus="(this.type='date')" required/></td>
                 </tr>
-            </table>
-            <div>Gender</div>
-            <label for="pedagogue-gender"></label><input id="pedagogue-gender" type="text" required/>
-            <table style="width: 100%; margin-top: 10px;">
                 <tr>
                     <td>Username</td>
                     <td style="padding-left: 10px">Password</td>
@@ -107,13 +103,13 @@
                     <td style="padding-left: 10px"><label for="pedagogue-password"></label><input value="${pedagogue.user.password}" id="pedagogue-password" type="text" required/></td>
                 </tr>
             </table>
-            <button id="submit-pedagogue" type="submit" style="float: right; width: 30%">Save Changes</button>
+            <button id="submit-pedagogue" type="submit" value="${pedagogue.id}" style="float: right; width: 30%">Save Changes</button>
         </form>
 
         <form id="course-form" class="login-block" method="post" style="width: 100%;margin-bottom: 50px">
             <h1>Add Course</h1>
             <label for="course-description"></label><input id="course-description" type="text" placeholder="Description" required/>
-            <button type="submit" style="float: right; width: 20%">Submit</button>
+            <button id="submit-course" type="submit" value="${pedagogue.id}" style="float: right; width: 20%">Submit</button>
         </form>
 
         <table id="course-table" class="table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
@@ -125,9 +121,7 @@
                 <tr>
                     <td style="width: 85%">${course.description}</td>
                     <td>
-                        <a href="#" ><i class="fa fa-edit" style="font-size:20px;color:#7386D5;text-shadow:2px 2px 4px #000000;"></i></a>
-                        <a href="#" ><i class="fa fa-plus" style="font-size:20px;color:lightblue;margin-left: 20px;text-shadow:2px 2px 4px #000000;"></i></a>
-                        <a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;text-shadow:2px 2px 4px #000000;"></i></a>
+                        <a data-value="${course.id}" class="add-student-to-course"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
                     </td>
                 </tr>
             </c:forEach>
@@ -169,7 +163,7 @@
 
             <div id="answer-label" style="margin-top: 20px; margin-bottom: 10px;">Answers</div>
 
-            <div id="yes/no">
+            <div id="yes-no">
                 <input type="radio" id="r-1" name="question-boolean-value" value="Yes"><label for="r-1"><b>Yes</b></label>
                 <input type="radio" id="r-2" name="question-boolean-value" value="No"><label for="r-2"><b>No</b></label>
             </div>
@@ -179,20 +173,20 @@
                     <th style="padding-bottom: 10px; width: 10%; font-size: 14px; color: #6d7fcc; font-family: Montserrat, serif;">Is Correct</th>
                     <th style="padding-bottom: 10px; font-size: 14px; color: #6d7fcc; font-family: Montserrat, serif;">Description</th></tr></thead>
                 <tr>
-                    <td style="width: 10%; display: block; "><input type="radio" id="r1" name="question-type"><label for="r1"></label></td>
-                    <td><label for="ra1"></label><textarea id="ra1" type="text" required></textarea></td>
+                    <td class="answer-choice" style="width: 10%; display: block; "><input type="radio" id="r1" name="single-choice"><label for="r1"></label></td>
+                    <td class="answer-value"><label for="ra1"></label><textarea id="ra1" class="single-choice-area" type="text" required></textarea></td>
                 </tr>
                 <tr>
-                    <td style="width: 10%; display: block; "><input type="radio" id="r2" name="question-type"><label for="r2"></label></td>
-                    <td><label for="ra2"></label><textarea id="ra2" type="text" required></textarea></td>
+                    <td class="answer-choice" style="width: 10%; display: block; "><input type="radio" id="r2" name="single-choice"><label for="r2"></label></td>
+                    <td class="answer-value"><label for="ra2"></label><textarea id="ra2" class="single-choice-area" type="text" required></textarea></td>
                 </tr>
                 <tr>
-                    <td style="width: 10%; display: block; "><input type="radio" id="r3" name="question-type"><label for="r3"></label></td>
-                    <td><label for="ra3"></label><textarea id="ra3" type="text" required></textarea></td>
+                    <td class="answer-choice" style="width: 10%; display: block; "><input type="radio" id="r3" name="single-choice"><label for="r3"></label></td>
+                    <td class="answer-value"><label for="ra3"></label><textarea id="ra3" class="single-choice-area" type="text" required></textarea></td>
                 </tr>
                 <tr>
-                    <td style="width: 10%; display: block; "><input type="radio" id="r4" name="question-type"><label for="r4"></label></td>
-                    <td><label for="ra4"></label><textarea id="ra4" type="text" required></textarea></td>
+                    <td class="answer-choice" style="width: 10%; display: block; "><input type="radio" id="r4" name="single-choice"><label for="r4"></label></td>
+                    <td class="answer-value"><label for="ra4"></label><textarea id="ra4" class="single-choice-area" type="text" required></textarea></td>
                 </tr>
             </table>
 
@@ -201,24 +195,24 @@
                     <th style="padding-bottom: 10px; width: 10%; font-size: 14px; color: #6d7fcc; font-family: Montserrat, serif;">Is Correct</th>
                     <th style="padding-bottom: 10px; font-size: 14px; color: #6d7fcc; font-family: Montserrat, serif;">Description</th></tr></thead>
                 <tr>
-                    <td style="width: 10%; display: block; "><input type="checkbox" id="ch1" name="question-type"><label for="ch1"></label></td>
-                    <td><label for="cha1"></label><textarea id="cha1" type="text" required></textarea></td>
+                    <td class="answer-choice" style="width: 10%; display: block; "><input type="checkbox" id="ch1"><label for="ch1"></label></td>
+                    <td class="answer-value"><label for="cha1"></label><textarea id="cha1" class="multiple-choice-area" type="text" required></textarea></td>
                 </tr>
                 <tr>
-                    <td style="width: 10%; display: block; "><input type="checkbox" id="ch2" name="question-type"><label for="ch2"></label></td>
-                    <td><label for="cha2"></label><textarea id="cha2" type="text" required></textarea></td>
+                    <td class="answer-choice" style="width: 10%; display: block; "><input type="checkbox" id="ch2"><label for="ch2"></label></td>
+                    <td class="answer-value"><label for="cha2"></label><textarea id="cha2" class="multiple-choice-area" type="text" required></textarea></td>
                 </tr>
                 <tr>
-                    <td style="width: 10%; display: block; "><input type="checkbox" id="ch3" name="question-type"><label for="ch3"></label></td>
-                    <td><label for="cha3"></label><textarea id="cha3" type="text" required></textarea></td>
+                    <td class="answer-choice" style="width: 10%; display: block; "><input type="checkbox" id="ch3"><label for="ch3"></label></td>
+                    <td class="answer-value"><label for="cha3"></label><textarea id="cha3" class="multiple-choice-area" type="text" required></textarea></td>
                 </tr>
                 <tr>
-                    <td style="width: 10%; display: block; "><input type="checkbox" id="ch4" name="question-type"><label for="ch4"></label></td>
-                    <td><label for="cha4"></label><textarea id="cha4" type="text" required></textarea></td>
+                    <td class="answer-choice" style="width: 10%; display: block; "><input type="checkbox" id="ch4"><label for="ch4"></label></td>
+                    <td class="answer-value"><label for="cha4"></label><textarea id="cha4" class="multiple-choice-area" type="text" required></textarea></td>
                 </tr>
             </table>
 
-            <button type="submit" style="float: right; width: 20%">Submit</button>
+            <button id="submit-question" type="submit" value="${pedagogue.id}" style="float: right; width: 20%">Submit</button>
         </form>
     </div>
 </div>

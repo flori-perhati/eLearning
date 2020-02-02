@@ -5,9 +5,7 @@ public class Answer {
     private long id;
     private long questionId;
     private String value;
-    private boolean isCorrect;
-
-    private Question question;
+    public boolean isCorrect;
 
     public long getId() {
         return id;
@@ -39,13 +37,5 @@ public class Answer {
 
     public void setCorrect(boolean correct) {
         isCorrect = correct;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
     }
 }
