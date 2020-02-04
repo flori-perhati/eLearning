@@ -37,7 +37,7 @@
                 <a href="#examSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Exam</a>
                 <ul class="collapse list-unstyled" id="examSubmenu">
                     <li><a id="allExams">All Exams</a></li>
-                    <li><a id="addExam">Add Exam</a></li>
+                    <li><a id="addExam" data-value="${pedagogue.id}">Add Exam</a></li>
                 </ul>
             </li>
             <li>
@@ -134,22 +134,19 @@
             <label for="exam-header"></label><textarea id="exam-header" type="text" required></textarea>
             <div style="margin-bottom: 10px">Exam Description</div>
             <label for="exam-description"></label><textarea id="exam-description" type="text" required></textarea>
+            <div style="margin-bottom: 10px">Course</div>
+            <label for="faculty"></label><select id="faculty" required>
+            </select>
 
-            <table class="table" id="add-questions-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+            <table class="table" id="questions-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);margin-top: 40px">
                 <thead class="thead-light"><tr>
-                    <th scope="col">Actions</th><th scope="col">Question</th>
+                    <th scope="col" style="width: 10%">Actions</th><th scope="col" style="width: 20%">Question Type</th><th scope="col" style="width: 70%">Description</th>
                 </tr></thead>
                 <tbody>
-                <c:forEach var="question" items="${questions}">
-                    <tr>
-                        <td style="width: 15%"><a href="#" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a></td>
-                        <td>${question.description}</td>
-                    </tr>
-                </c:forEach>
                 </tbody>
             </table>
 
-            <button type="submit" style="float: right; width: 20%">Submit</button>
+            <button value="${pedaogue.id}" id="submit-exam" type="submit" style="float: right; width: 20%">Submit</button>
         </form>
 
         <form id="question-form" class="login-block" method="post" style="width: 75%;margin-bottom: 60px">

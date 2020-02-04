@@ -85,6 +85,30 @@ $(document).ready(function () {
         questionForm.hide();
 
         // warning.html("");
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "/getQuestions",//?pedagogueId=" + $('#addExam').data("value"),
+            data: {pedagogueId: $('#addExam').data("value")},
+            dataType: 'json'
+        }).done(function(response){
+            if (response === "You have no question or course inserted!")
+                alert(response);
+            else {
+                let courses = response.courses;
+                let questions = response.questions;
+                courses.forEach(function (course) {
+                    let o = new Option(course.description, course.id);
+                    $("#faculty").append(o);
+                });
+                questions.forEach(function (question) {
+                    $('#questions-table tbody').append(insertQuestionRow(question));
+                });
+            }
+        }).fail(function(e) {
+            console.log(e);
+        });
     });
 
     $('#addQuestion').click(function () {
@@ -177,7 +201,7 @@ $(document).ready(function () {
                 alert(response);
             else {
                 courseForm.trigger("reset");
-                // $('#course-table tr:last').after(insertCourseRow(response));
+                $('#course-table tr:last').after(insertCourseRow(response));
             }
         }).fail(function(e) {
             console.log(e);
@@ -213,6 +237,53 @@ $(document).ready(function () {
                 $('.multiple-choice-area').prop('required',true);
             }
         }
+    });
+
+    examForm.submit(function (event) {
+        event.preventDefault();
+
+        let exam = {};
+        let questions = [];
+
+        exam['courseId'] = $('#faculty').val();
+        exam['pedagogueId'] = $('#submit-exam').val();
+        exam['header'] = $('#exam-header').val();
+        exam['description'] = $('#exam-description').val();
+
+        let course = {};
+        course['id'] = $('#faculty').val();
+        course['pedagogueId'] = $('#submit-exam').val();
+        course['description'] = $('#faculty').html();
+
+        $("table#questions-table tbody tr").each(function () {
+            if ($(this).find('td.question-id').find('input[type="checkbox"]').is(':checked')) {
+                let question = {};
+                question['id'] = $(this).find('td.question-id').find('input[type="checkbox"]').val();
+                question['questionType'] = $(this).find('td.question-type').html();
+                question['value'] = $(this).find('td.question-value').html();
+                questions.push(question);
+            }
+        });
+
+        exam['questions'] = questions;
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/createExam",
+            data: JSON.stringify(exam),
+            dataType: 'json'
+        }).done(function(response){
+            if (response === "Something went wrong!")
+                // $('#exam-table tbody').append(insertQuestionRow(response));
+                alert(response);
+            else {
+                examForm.trigger("reset");
+                alert(response);
+            }
+        }).fail(function(e) {
+            console.log(e);
+        });
     });
 
     questionForm.submit(function (event) {
@@ -273,12 +344,22 @@ $(document).ready(function () {
         });
     });
 
+    function insertExamRow(exam) {
+        return '<tr>' +
+            '<td>' + exam.course.description +'</td>' +
+            '<td>' + exam.header +'</td>' +
+            '<td>' + exam.description +'</td>' +
+            '<td>' +
+            '<a data-value="' + exam.id + '" class="exam-results"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>' +
+            '</td>' +
+            '</tr>';
+    }
+
     function insertQuestionRow(question) {
         return '<tr>' +
-            '<td style="width: 85%">' + course.description +'</td>' +
-            '<td>' +
-            '<a data-value="' + course.id + '" class="add-student-to-course"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>' +
-            '</td>' +
+            '<td class="question-id"><input type="checkbox" value="' + question.id + '" id="' + question.id + '"><label for="' + question.id + '"></label></td>' +
+            '<td class="question-type">' + question.questionType + '</td>' +
+            '<td class="question-value">' + question.value + '</td>' +
             '</tr>';
     }
 

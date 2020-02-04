@@ -12,7 +12,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("")
@@ -44,6 +46,7 @@ public class PedagogueController {
         model.addAttribute("exams", examDao.examByPedagogue(pedagogue.getId()));
         model.addAttribute("students", new ArrayList<>());
         model.addAttribute("questions", new ArrayList<>());
+        model.addAttribute("faculties", facultyDao.getFaculties());
         return "pedagogue";
     }
 
@@ -59,6 +62,17 @@ public class PedagogueController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/createCourse", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String createQuestion(@RequestBody Course course) {
+        String response = "Success";
+
+        if (courseDao.insert(course))
+            return new Gson().toJson(courseDao.lastCourse());
+        else
+            return new Gson().toJson("Something went wrong!");
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/addStudentToCourse", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String savePedagogue(@RequestBody long courseId) {
         // students that aren't registered to this course
@@ -66,22 +80,39 @@ public class PedagogueController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/getQuestions", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getQuestions(@RequestParam("pedagogueId") long pedagogueId) {
+        // students that aren't registered to this course
+        List<Question> questions = questionDao.questionsByPedagogue(pedagogueId);
+        List<Course> courses = courseDao.getCoursesByPedagogueId(pedagogueId);
+        Map mp = new HashMap();
+
+        mp.put("questions", questions);
+        mp.put("courses", courses);
+
+        if (questions.isEmpty() && courses.isEmpty())
+            return new Gson().toJson("You have no question or course inserted!");
+        else
+            return new Gson().toJson(mp);
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/createExam", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String createExam(@RequestBody Question question) {
+    public String createExam(@RequestBody Exam exam) {
         String response = "Success";
 
-        if (questionDao.insert(question)) {
-            Question insertedQuestion = questionDao.lastQuestion();
-            if (insertedQuestion != null) {
-                for (Answer answer : question.getAnswers()) {
-                    answer.setQuestionId(insertedQuestion.getId());
-                    if (!answerDao.insert(answer))
-                        response = "Something went wrong!";
-                }
-            } else
-                response = "Something went wrong!";
-        } else
-            response = "Something went wrong!";
+//        if (questionDao.insert(question)) {
+//            Question insertedQuestion = questionDao.lastQuestion();
+//            if (insertedQuestion != null) {
+//                for (Answer answer : question.getAnswers()) {
+//                    answer.setQuestionId(insertedQuestion.getId());
+//                    if (!answerDao.insert(answer))
+//                        response = "Something went wrong!";
+//                }
+//            } else
+//                response = "Something went wrong!";
+//        } else
+//            response = "Something went wrong!";
 
         return new Gson().toJson(response);
     }

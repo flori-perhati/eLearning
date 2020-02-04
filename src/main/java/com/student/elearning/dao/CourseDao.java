@@ -1,6 +1,7 @@
 package com.student.elearning.dao;
 
 import com.student.elearning.entity.Course;
+import com.student.elearning.mapper.CourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -74,5 +75,11 @@ public class CourseDao extends JdbcDaoSupport {
                 return courses;
             }
         });
+    }
+
+    public Course lastCourse() {
+        String sql = "SELECT TOP 1 * FROM course ORDER BY id DESC";
+        List<Course> courses = template.query(sql, new CourseMapper());
+        return courses.isEmpty() ? null : courses.get(0);
     }
 }
