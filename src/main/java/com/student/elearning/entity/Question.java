@@ -9,6 +9,8 @@ public class Question {
     private String questionType;
     private String value;
 
+    private double points;
+
     private Pedagogue pedagogue;
     private List<Answer> answers;
     private List<Exam> exams;
@@ -43,6 +45,14 @@ public class Question {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public double getPoints() {
+        return points;
+    }
+
+    public void setPoints(double points) {
+        this.points = points;
     }
 
     public Pedagogue getPedagogue() {

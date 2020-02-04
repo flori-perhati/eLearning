@@ -181,6 +181,25 @@ public class StudentDao extends JdbcDaoSupport {
         });
     }
 
+    public List<Student> getStudentsForCourse(long facultyId, long courseId, StudentCourseDao studentCourseDao) {
+        String sql = "SELECT * FROM student WHERE faculty_id = ? AND status = 1";
+        Object[] params = new Object[] {facultyId};
+        return template.query(sql, params, resultSet -> {
+            List<Student> students = new ArrayList<>();
+            while(resultSet.next()) {
+                Student student = new Student();
+
+                student.setId(resultSet.getInt("id"));
+                student.setFirstName(resultSet.getString("first_name"));
+                student.setLastName(resultSet.getString("last_name"));
+
+                if (studentCourseDao.studentCourses(student.getId(), courseId).isEmpty())
+                    students.add(student);
+            }
+            return students;
+        });
+    }
+
     public List<Student> studentsByCourse(long courseId) {
         String sql = "SELECT * FROM student_course WHERE course_id = ?";
         Object[] params = new Object[] {courseId};

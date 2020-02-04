@@ -121,7 +121,40 @@
                 <tr>
                     <td style="width: 85%">${course.description}</td>
                     <td>
-                        <a data-value="${course.id}" class="add-student-to-course"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
+                        <a data-value="${course.id}" data-description="${course.description}" data-faculty="${pedagogue.facultyId}" class="add-student-to-course"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+
+        <form id="add-students" class="login-block" method="post" style="width: 50%;margin-top: 50px">
+            <div><h1 style="display: inline">Add Students</h1> <a id="hide-student-form"><i class="fa fa-close" style="display: inline;font-size:20px;color:#7386D5;float: right"></i></a></div>
+            <div id="selected-course" style="margin-top:20px; margin-bottom: 20px"></div>
+
+            <table class="table" id="students-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+                <thead class="thead-light"><tr>
+                    <th scope="col" style="width: 10%">Add</th><th scope="col" style="width: 90%">Student</th>
+                </tr></thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <button id="submit-students" type="submit" style="float: right; width: 20%">Submit</button>
+        </form>
+
+        <table id="exam-table" class="table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+            <thead class="thead-light"><tr>
+                <th scope="col">Course</th><th scope="col">Exam Header</th><th scope="col">Description</th><th scope="col" style="width: 15%">Actions</th>
+            </tr></thead>
+            <tbody>
+            <c:forEach var="exam" items="${exams}">
+                <tr>
+                    <td>${exam.course.description}</td>
+                    <td>${exam.header}</td>
+                    <td>${exam.description}</td>
+                    <td>
+                        <a data-value="${exam}" class="add-student-to-course"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
                     </td>
                 </tr>
             </c:forEach>
@@ -140,13 +173,13 @@
 
             <table class="table" id="questions-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);margin-top: 40px">
                 <thead class="thead-light"><tr>
-                    <th scope="col" style="width: 10%">Actions</th><th scope="col" style="width: 20%">Question Type</th><th scope="col" style="width: 70%">Description</th>
+                    <th scope="col" style="width: 10%">Actions</th><th scope="col" style="width: 20%">Question Type</th><th scope="col" style="width: 60%">Description</th><th scope="col" style="width: 10%; text-align: end">Points</th>
                 </tr></thead>
                 <tbody>
                 </tbody>
             </table>
 
-            <button value="${pedaogue.id}" id="submit-exam" type="submit" style="float: right; width: 20%">Submit</button>
+            <button value="${pedagogue.id}" id="submit-exam" type="submit" style="float: right; width: 20%">Submit</button>
         </form>
 
         <form id="question-form" class="login-block" method="post" style="width: 75%;margin-bottom: 60px">

@@ -1,6 +1,6 @@
 package com.student.elearning.mapper;
 
-import com.student.elearning.model.Exam;
+import com.student.elearning.entity.Exam;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -13,7 +13,8 @@ public class ExamMapper implements RowMapper<Exam> {
         exam.setId(resultSet.getInt("id"));
         exam.setCourseId(resultSet.getInt("course_id"));
         exam.setPedagogueId(resultSet.getInt("pedagogue_id"));
-        exam.setTitle(resultSet.getString("title"));
+        exam.setHeader(resultSet.getString("header"));
+        exam.setDescription(resultSet.getString("description"));
         return exam;
     }
 }

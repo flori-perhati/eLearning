@@ -3,10 +3,12 @@ $(document).ready(function () {
 
     let pedagogueForm = $('#pedagogue-profile');
     let courseForm = $('#course-form');
+    let addStudentsForm = $('#add-students');
     let examForm = $('#exam-form');
     let questionForm = $('#question-form');
 
     let courseTable = $('#course-table');
+    let examTable = $('#exam-table');
     let singleChoiceTable = $('#single-choice-table');
     let multipleChoiceTable = $('#multiple-choice-table');
 
@@ -24,10 +26,12 @@ $(document).ready(function () {
 
     pedagogueForm.show();
     courseForm.hide();
+    addStudentsForm.hide();
     examForm.hide();
     questionForm.hide();
 
     courseTable.hide();
+    examTable.hide();
     questionBlock.hide();
     singleChoiceTable.hide();
     multipleChoiceTable.hide();
@@ -57,6 +61,7 @@ $(document).ready(function () {
         pedagogueForm.show();
         courseForm.hide();
         courseTable.hide();
+        examTable.hide();
         examForm.hide();
         questionForm.hide();
 
@@ -69,6 +74,50 @@ $(document).ready(function () {
         pedagogueForm.hide();
         courseForm.show();
         courseTable.show();
+        examTable.hide();
+        examForm.hide();
+        questionForm.hide();
+
+        // warning.html("");
+    });
+
+    $('.add-student-to-course').click(function () {
+        $('#selected-course').text($('.add-student-to-course').data("description"));
+        addStudentsForm.show();
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "/getStudents",//?pedagogueId=" + $('#addExam').data("value"),
+            data: {courseId: $('.add-student-to-course').data("value"), facultyId: $('.add-student-to-course').data("faculty")},
+            dataType: 'json'
+        }).done(function(response){
+            if (response === "There are no students inserted!")
+                alert(response);
+            else {
+                $("#students-table tbody").empty();
+                response.forEach(function (student) {
+                    $('#students-table tbody').append(insertStudentRow(student));
+                });
+            }
+        }).fail(function(e) {
+            console.log(e);
+        });
+    });
+
+    $('#hide_student_form').click(function () {
+        addStudentsForm.hide();
+        $('#selected-course').text("");
+        $("#students-table tbody").empty();
+    });
+
+    $('#allExams').click(function () {
+        header.html('All Exams');
+
+        pedagogueForm.hide();
+        courseForm.hide();
+        courseTable.hide();
+        examTable.show();
         examForm.hide();
         questionForm.hide();
 
@@ -81,6 +130,7 @@ $(document).ready(function () {
         pedagogueForm.hide();
         courseForm.hide();
         courseTable.hide();
+        examTable.hide();
         examForm.show();
         questionForm.hide();
 
@@ -96,6 +146,7 @@ $(document).ready(function () {
             if (response === "You have no question or course inserted!")
                 alert(response);
             else {
+                $("#questions-table tbody").empty();
                 let courses = response.courses;
                 let questions = response.questions;
                 courses.forEach(function (course) {
@@ -117,10 +168,42 @@ $(document).ready(function () {
         pedagogueForm.hide();
         courseForm.hide();
         courseTable.hide();
+        examTable.hide();
         examForm.hide();
         questionForm.show();
 
         // warning.html("");
+    });
+
+    $('input[type=radio]').click(function(){
+        if (this.name === "question-type") {
+            $("#answer-label").show();
+            if (this.value === "Yes/No") {
+                questionBlock.show();
+
+                singleChoiceTable.hide();
+                $('.single-choice-area').removeAttr('required');
+
+                multipleChoiceTable.hide();
+                $('.multiple-choice-area').removeAttr('required');
+            } else if (this.value === "Single Choice") {
+                questionBlock.hide();
+
+                singleChoiceTable.show();
+                $('.single-choice-area').prop('required',true);
+
+                multipleChoiceTable.hide();
+                $('.multiple-choice-area').removeAttr('required');
+            } else if (this.value === "Multiple Choice") {
+                questionBlock.hide();
+
+                singleChoiceTable.hide();
+                $('.single-choice-area').removeAttr('required');
+
+                multipleChoiceTable.show();
+                $('.multiple-choice-area').prop('required',true);
+            }
+        }
     });
 
     pedagogueForm.submit(function(event) {
@@ -188,55 +271,38 @@ $(document).ready(function () {
         });
     });
 
-    $('.add-student-to-course').click(function () {
-        let courseId = $('.add-student-to-course').data("value");
+    addStudentsForm.submit(function(event) {
+        event.preventDefault();
+
+        let studentCourses = [];
+
+        $("table#students-table tbody tr").each(function () {
+            if ($(this).find('td.student-id').find('input[type="checkbox"]').is(':checked')) {
+                let studentCourse = {};
+                studentCourse['courseId'] = '';
+                studentCourse['studentId'] = $(this).find('td.student-id').find('input[type="checkbox"]').val();
+                studentCourses.push(studentCourse);
+            }
+        });
+
         $.ajax({
             type: "POST",
             contentType: "application/json",
             url: "/addStudentToCourse",
-            data: JSON.stringify(courseId),
+            data: JSON.stringify(studentCourses),
             dataType: 'json'
         }).done(function(response){
             if (response === "Something went wrong!")
                 alert(response);
             else {
-                courseForm.trigger("reset");
-                $('#course-table tr:last').after(insertCourseRow(response));
+                addStudentsForm.hide();
+                $('#selected-course').text("");
+                $("#students-table tbody").empty();
+                alert(response)
             }
         }).fail(function(e) {
             console.log(e);
         });
-    });
-
-    $('input[type=radio]').click(function(){
-        if (this.name === "question-type") {
-            $("#answer-label").show();
-            if (this.value === "Yes/No") {
-                questionBlock.show();
-
-                singleChoiceTable.hide();
-                $('.single-choice-area').removeAttr('required');
-
-                multipleChoiceTable.hide();
-                $('.multiple-choice-area').removeAttr('required');
-            } else if (this.value === "Single Choice") {
-                questionBlock.hide();
-
-                singleChoiceTable.show();
-                $('.single-choice-area').prop('required',true);
-
-                multipleChoiceTable.hide();
-                $('.multiple-choice-area').removeAttr('required');
-            } else if (this.value === "Multiple Choice") {
-                questionBlock.hide();
-
-                singleChoiceTable.hide();
-                $('.single-choice-area').removeAttr('required');
-
-                multipleChoiceTable.show();
-                $('.multiple-choice-area').prop('required',true);
-            }
-        }
     });
 
     examForm.submit(function (event) {
@@ -244,6 +310,7 @@ $(document).ready(function () {
 
         let exam = {};
         let questions = [];
+        let flag = false;
 
         exam['courseId'] = $('#faculty').val();
         exam['pedagogueId'] = $('#submit-exam').val();
@@ -255,35 +322,51 @@ $(document).ready(function () {
         course['pedagogueId'] = $('#submit-exam').val();
         course['description'] = $('#faculty').html();
 
+        exam['course'] = course;
+
         $("table#questions-table tbody tr").each(function () {
             if ($(this).find('td.question-id').find('input[type="checkbox"]').is(':checked')) {
                 let question = {};
+
+                let points = $(this).find('td.question-points').find('input[type="number"]').val();
+                if(points.length === 0) {
+                    alert("Please evaluate question/s selected!");
+                    flag = true;
+                    return false;
+                }
+
                 question['id'] = $(this).find('td.question-id').find('input[type="checkbox"]').val();
                 question['questionType'] = $(this).find('td.question-type').html();
                 question['value'] = $(this).find('td.question-value').html();
+                question['points'] = points;
                 questions.push(question);
             }
         });
 
-        exam['questions'] = questions;
+        if (!flag) {
+            exam['questions'] = questions;
 
-        $.ajax({
-            type: "POST",
-            contentType: "application/json",
-            url: "/createExam",
-            data: JSON.stringify(exam),
-            dataType: 'json'
-        }).done(function(response){
-            if (response === "Something went wrong!")
-                // $('#exam-table tbody').append(insertQuestionRow(response));
-                alert(response);
-            else {
-                examForm.trigger("reset");
-                alert(response);
-            }
-        }).fail(function(e) {
-            console.log(e);
-        });
+            if (questions.length === 0)
+                alert("Add questions to exam!");
+            else
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "/createExam",
+                    data: JSON.stringify(exam),
+                    dataType: 'json'
+                }).done(function (response) {
+                    if (response === "Something went wrong!")
+                        alert(response);
+                    else {
+                        examForm.trigger("reset");
+                        $('#exam-table tbody').append(insertExamRow(response));
+                        alert("Success");
+                    }
+                }).fail(function (e) {
+                    console.log(e);
+                });
+        }
     });
 
     questionForm.submit(function (event) {
@@ -344,13 +427,51 @@ $(document).ready(function () {
         });
     });
 
+    $('input[type=radio]').click(function(){
+        if (this.name === "question-type") {
+            $("#answer-label").show();
+            if (this.value === "Yes/No") {
+                questionBlock.show();
+
+                singleChoiceTable.hide();
+                $('.single-choice-area').removeAttr('required');
+
+                multipleChoiceTable.hide();
+                $('.multiple-choice-area').removeAttr('required');
+            } else if (this.value === "Single Choice") {
+                questionBlock.hide();
+
+                singleChoiceTable.show();
+                $('.single-choice-area').prop('required',true);
+
+                multipleChoiceTable.hide();
+                $('.multiple-choice-area').removeAttr('required');
+            } else if (this.value === "Multiple Choice") {
+                questionBlock.hide();
+
+                singleChoiceTable.hide();
+                $('.single-choice-area').removeAttr('required');
+
+                multipleChoiceTable.show();
+                $('.multiple-choice-area').prop('required',true);
+            }
+        }
+    });
+
+    function insertStudentRow(student) {
+        return '<tr>' +
+            '<td class="student-id"><input type="checkbox" value="' + student.id + '" id="' + student.id + '"><label for="' + student.id + '"></label></td>' +
+            '<td class="student">' + student.firstName + ' ' + student.lastName + '</td>' +
+            '</tr>';
+    }
+
     function insertExamRow(exam) {
         return '<tr>' +
             '<td>' + exam.course.description +'</td>' +
             '<td>' + exam.header +'</td>' +
             '<td>' + exam.description +'</td>' +
             '<td>' +
-            '<a data-value="' + exam.id + '" class="exam-results"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>' +
+            '<a data-value="' + exam + '" class="exam-results"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>' +
             '</td>' +
             '</tr>';
     }
@@ -360,6 +481,7 @@ $(document).ready(function () {
             '<td class="question-id"><input type="checkbox" value="' + question.id + '" id="' + question.id + '"><label for="' + question.id + '"></label></td>' +
             '<td class="question-type">' + question.questionType + '</td>' +
             '<td class="question-value">' + question.value + '</td>' +
+            '<td class="question-points"><input type="number" style="text-align: end"></td>' +
             '</tr>';
     }
 

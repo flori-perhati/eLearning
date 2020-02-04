@@ -145,7 +145,7 @@ $(document).ready(function () {
             '<td>' + student.firstName +'</td>' +
             '<td>' + student.lastName + '</td>' +
             '<td>' + student.faculty.description + '</td>' +
-            '<td>' + student.registerDate + '</td>' +
+            '<td>' + student.registrationDate + '</td>' +
             '<td>' + student.user.username + '</td>' +
             '<td>' + student.user.password + '</td>' +
             '<td>' +

@@ -23,7 +23,15 @@ public class PedagogueController {
     @Autowired
     PedagogueDao pedagogueDao;
     @Autowired
+    StudentDao studentDao;
+    @Autowired
+    UserDao userDao;
+    @Autowired
     FacultyDao facultyDao;
+    @Autowired
+    ExamQuestionDao examQuestionDao;
+    @Autowired
+    StudentCourseDao studentCourseDao;
     @Autowired
     QuestionDao questionDao;
     @Autowired
@@ -32,8 +40,6 @@ public class PedagogueController {
     CourseDao courseDao;
     @Autowired
     ExamDao examDao;
-    @Autowired
-    UserDao userDao;
 
     @RequestMapping("/pedagogue")
     public String pedagogue(Model model, HttpSession session) {
@@ -64,25 +70,38 @@ public class PedagogueController {
     @ResponseBody
     @RequestMapping(value = "/createCourse", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String createQuestion(@RequestBody Course course) {
-        String response = "Success";
-
-        if (courseDao.insert(course))
-            return new Gson().toJson(courseDao.lastCourse());
-        else
+        if (courseDao.insert(course)) {
+            Course lastCourse = courseDao.lastCourse();
+            if (lastCourse == null)
+                return new Gson().toJson("Something went wrong!");
+            else
+                return new Gson().toJson(lastCourse);
+        } else
             return new Gson().toJson("Something went wrong!");
     }
 
     @ResponseBody
+    @RequestMapping(value = "/getStudents", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getStudents(@RequestParam("courseId") long courseId, @RequestParam("facultyId") long facultyId) {
+        List<Student> students = studentDao.getStudentsForCourse(facultyId, courseId, studentCourseDao);
+        if (students.isEmpty())
+            return new Gson().toJson("There are no students inserted!");
+        else
+            return new Gson().toJson(students);
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/addStudentToCourse", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String savePedagogue(@RequestBody long courseId) {
-        // students that aren't registered to this course
-        return new Gson().toJson("");
+    public String addStudentsToCourse(@RequestBody List<StudentCourse> studentCourses) {
+        for (StudentCourse studentCourse : studentCourses) {
+            studentCourseDao.insert(studentCourse);
+        }
+        return new Gson().toJson("Success");
     }
 
     @ResponseBody
     @RequestMapping(value = "/getQuestions", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getQuestions(@RequestParam("pedagogueId") long pedagogueId) {
-        // students that aren't registered to this course
         List<Question> questions = questionDao.questionsByPedagogue(pedagogueId);
         List<Course> courses = courseDao.getCoursesByPedagogueId(pedagogueId);
         Map mp = new HashMap();
@@ -99,22 +118,18 @@ public class PedagogueController {
     @ResponseBody
     @RequestMapping(value = "/createExam", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String createExam(@RequestBody Exam exam) {
-        String response = "Success";
-
-//        if (questionDao.insert(question)) {
-//            Question insertedQuestion = questionDao.lastQuestion();
-//            if (insertedQuestion != null) {
-//                for (Answer answer : question.getAnswers()) {
-//                    answer.setQuestionId(insertedQuestion.getId());
-//                    if (!answerDao.insert(answer))
-//                        response = "Something went wrong!";
-//                }
-//            } else
-//                response = "Something went wrong!";
-//        } else
-//            response = "Something went wrong!";
-
-        return new Gson().toJson(response);
+        if (examDao.insert(exam)) {
+            Exam lastExam = examDao.lastExam();
+            for (Question question : exam.getQuestions()) {
+                ExamQuestion examQuestion = new ExamQuestion();
+                examQuestion.setExamId(lastExam.getId());
+                examQuestion.setQuestionId(question.getId());
+                examQuestion.setQuestionPoints(question.getPoints());
+                examQuestionDao.insert(examQuestion);
+            }
+            return new Gson().toJson(exam);
+        } else
+            return new Gson().toJson("Something went wrong!");
     }
 
     @ResponseBody
