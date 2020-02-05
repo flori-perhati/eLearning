@@ -5,7 +5,7 @@
       <Languages>
         <language minSize="11" name="Style Sheets" />
         <language minSize="147" name="Java" />
-        <language minSize="101" name="JavaScript" />
+        <language minSize="151" name="JavaScript" />
       </Languages>
     </inspection_tool>
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">

@@ -4,6 +4,7 @@ import com.student.elearning.dao.CourseDao;
 import com.student.elearning.dao.FacultyDao;
 import com.student.elearning.dao.StudentDao;
 import com.student.elearning.dao.UserDao;
+import com.student.elearning.entity.Pedagogue;
 import com.student.elearning.entity.Student;
 import com.student.elearning.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 
 @Controller
@@ -29,12 +31,27 @@ public class StudentController {
     @Autowired
     UserDao userDao;
 
+    @RequestMapping("/pedagogue")
+    public String pedagogue(Model model, HttpSession session) {
+//        long userId = (long) session.getAttribute("user_id");
+        long userId = 2;
+        Pedagogue pedagogue = pedagogueDao.pedagogueByUserId(userId);
+
+        model.addAttribute("pedagogue", pedagogue);
+        model.addAttribute("courses", courseDao.getCoursesByPedagogueId(pedagogue.getId()));
+        model.addAttribute("exams", examDao.examByPedagogue(pedagogue.getId()));
+        model.addAttribute("students", new ArrayList<>());
+        model.addAttribute("questions", new ArrayList<>());
+        model.addAttribute("faculties", facultyDao.getFaculties());
+        return "pedagogue";
+    }
+
     /**
      * Shows the view when a student is logged in
      * @param model type Model used for adding parameters to the view
      * @return student_view
      */
-    @RequestMapping("/student_view")
+    @RequestMapping("/student")
     public String viewData(@ModelAttribute("user") User user, Model model) {
         Student student = studentDao.studentByUserId(user.getId());
 
@@ -42,7 +59,7 @@ public class StudentController {
 
         model.addAttribute("courses", new ArrayList<>());
         model.addAttribute("examResults", new ArrayList<>());
-        return "student_view";
+        return "student";
     }
 
     /**
