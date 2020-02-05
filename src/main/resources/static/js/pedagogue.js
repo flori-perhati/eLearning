@@ -143,10 +143,10 @@ $(document).ready(function () {
             data: {pedagogueId: $('#addExam').data("value")},
             dataType: 'json'
         }).done(function(response){
+            $("#questions-table tbody").empty();
             if (response === "You have no question or course inserted!")
                 alert(response);
             else {
-                $("#questions-table tbody").empty();
                 let courses = response.courses;
                 let questions = response.questions;
                 courses.forEach(function (course) {

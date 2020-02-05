@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>eLearning - Pedagogue</title>
+    <title>eLearning - Student</title>
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/form1.css"/>">
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/radio.css"/>">
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/checkbox.css"/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/loader.css"/>">
 
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -93,16 +94,36 @@
             <button id="submit-student" type="submit" value="${student.id}" style="float: right; width: 30%">Save Changes</button>
         </form>
 
-        <table id="course-table" class="table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
-            <thead class="thead-light"><tr>
-                <th scope="col">Course Description</th>
-            </tr></thead>
-            <tbody>
-            <c:forEach var="course" items="${courses}">
-                <tr><td style="width: 85%">${course.description}</td></tr>
-            </c:forEach>
-            </tbody>
-        </table>
+        <div>
+            <table id="course-table" class="table" style="float: left; width: 35%; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+                <thead class="thead-light"><tr>
+                    <th scope="col" hidden>Course Id</th><th scope="col">Course Description</th>
+                </tr></thead>
+                <tbody>
+                <c:forEach var="course" items="${courses}">
+                    <tr class="course-row" val="${course.id}" val1="${course.description}"><td hidden>${course.id}</td><td>${course.description}</td></tr>
+                </c:forEach>
+                </tbody>
+            </table>
+
+            <div id="exams" class="login-block" style="float: right; width: 60%;">
+                <h1 id="course">Course Exams</h1>
+
+                <div id="exam-error" style="color: orangered"></div>
+
+                <table id="exam-table" class="table" style="margin-top: 20px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+                    <thead class="thead-light"><tr>
+                        <th scope="col" style="width: 40%">Header</th><th scope="col" style="width: 60%">Description</th>
+                    </tr></thead>
+                    <tbody>
+<%--                        <tr><td>${course.description}</td><td>${course.description}</td></tr>--%>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div id="loader"></div>
     </div>
 </div>
 
@@ -117,5 +138,6 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" src="<c:url value="/js/student.js"/>"></script>
+
 </body>
 </html>

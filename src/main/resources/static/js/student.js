@@ -1,8 +1,11 @@
 $(document).ready(function () {
+    hideLoader();
     let header = $('#window-header');
 
     let studentForm = $('#student-profile');
     let courseTable = $('#course-table');
+    let exams = $('#exams');
+    let examTable = $('#exam-table');
 
     let firstName = $('#student-first-name');
     let lastName = $('#student-last-name');
@@ -12,8 +15,12 @@ $(document).ready(function () {
     let password = $('#student-password');
     let submitStudent = $('#submit-student');
 
+    let course = $('#course');
+    let examError = $('#exam-error');
+
     studentForm.show();
     courseTable.hide();
+    exams.hide();
 
     $("#answer-label").hide();
 
@@ -39,6 +46,7 @@ $(document).ready(function () {
 
         studentForm.show();
         courseTable.hide();
+        exams.hide();
         // warning.html("");
     });
 
@@ -47,6 +55,15 @@ $(document).ready(function () {
 
         studentForm.hide();
         courseTable.show();
+        // warning.html("");
+    });
+
+    $('#results').click(function () {
+        header.html('All Courses');
+
+        studentForm.hide();
+        courseTable.hide();
+        exams.hide();
         // warning.html("");
     });
 
@@ -89,6 +106,58 @@ $(document).ready(function () {
         });
     });
 
+    courseTable.on("click", "td", function() {
+        showLoader();
+        exams.show();
+        course.html($(this).closest('tr').attr("val1") + ' Exams');
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "/getExams",
+            data: {courseId: $(this).closest('tr').attr("val")},
+            dataType: 'json'
+        }).done(function(response){
+            $("#exam-table tbody").empty();
+            if (response === "This course doesn't have exams!") {
+                examTable.hide();
+                examError.show();
+                examError.html(response);
+            } else {
+                examTable.show();
+                examError.hide();
+                $("#exam-table tbody").empty();
+                response.forEach(function (exam) {
+                    $('#exam-table tbody').append(insertExamRow(exam));
+                });
+            }
+            hideLoader();
+        }).fail(function(e) {
+            console.log(e);
+        });
+    });
+
+    examTable.on("click", "td", function() {
+        exams.show();
+        alert($(this).closest('tr').attr("val"));
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: "/getExam",
+            data: {examId: $(this).closest('tr').attr("val")},
+            dataType: 'json'
+        }).done(function(response){
+            if (response === "Something went wrong!")
+                alert(response);
+            else {
+                // generate exam
+            }
+        }).fail(function(e) {
+            console.log(e);
+        });
+    });
+
     function disableProfile() {
         firstName.attr('disabled','disabled');
         lastName.attr('disabled','disabled');
@@ -97,5 +166,20 @@ $(document).ready(function () {
         username.attr('disabled','disabled');
         password.attr('disabled','disabled');
         submitStudent.hide();
+    }
+
+    function insertExamRow(exam) {
+        return '<tr val="' + exam.id + '">' +
+            '<td class="description">' + exam.header + '</td>' +
+            '<td class="description">' + exam.description + '</td>' +
+            '</tr>';
+    }
+
+    function hideLoader() {
+        $("#loader").css("display", "none");
+    }
+
+    function showLoader() {
+        $("#loader").css("display", "block");
     }
 });

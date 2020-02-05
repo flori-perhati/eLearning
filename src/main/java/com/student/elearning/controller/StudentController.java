@@ -1,27 +1,27 @@
 package com.student.elearning.controller;
 
-import com.student.elearning.dao.CourseDao;
-import com.student.elearning.dao.FacultyDao;
-import com.student.elearning.dao.StudentDao;
-import com.student.elearning.dao.UserDao;
+import com.google.gson.Gson;
+import com.student.elearning.dao.*;
+import com.student.elearning.entity.Exam;
 import com.student.elearning.entity.Pedagogue;
 import com.student.elearning.entity.Student;
 import com.student.elearning.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("")
 public class StudentController {
 
+    @Autowired
+    StudentCourseDao studentCourseDao;
     @Autowired
     StudentDao studentDao;
     @Autowired
@@ -29,22 +29,24 @@ public class StudentController {
     @Autowired
     CourseDao courseDao;
     @Autowired
+    ExamDao examDao;
+    @Autowired
     UserDao userDao;
 
-    @RequestMapping("/pedagogue")
-    public String pedagogue(Model model, HttpSession session) {
-//        long userId = (long) session.getAttribute("user_id");
-        long userId = 2;
-        Pedagogue pedagogue = pedagogueDao.pedagogueByUserId(userId);
-
-        model.addAttribute("pedagogue", pedagogue);
-        model.addAttribute("courses", courseDao.getCoursesByPedagogueId(pedagogue.getId()));
-        model.addAttribute("exams", examDao.examByPedagogue(pedagogue.getId()));
-        model.addAttribute("students", new ArrayList<>());
-        model.addAttribute("questions", new ArrayList<>());
-        model.addAttribute("faculties", facultyDao.getFaculties());
-        return "pedagogue";
-    }
+//    @RequestMapping("/pedagogue")
+//    public String pedagogue(Model model, HttpSession session) {
+////        long userId = (long) session.getAttribute("user_id");
+//        long userId = 2;
+//        Pedagogue pedagogue = pedagogueDao.pedagogueByUserId(userId);
+//
+//        model.addAttribute("pedagogue", pedagogue);
+//        model.addAttribute("courses", courseDao.getCoursesByPedagogueId(pedagogue.getId()));
+//        model.addAttribute("exams", examDao.examByPedagogue(pedagogue.getId()));
+//        model.addAttribute("students", new ArrayList<>());
+//        model.addAttribute("questions", new ArrayList<>());
+//        model.addAttribute("faculties", facultyDao.getFaculties());
+//        return "pedagogue";
+//    }
 
     /**
      * Shows the view when a student is logged in
@@ -53,13 +55,35 @@ public class StudentController {
      */
     @RequestMapping("/student")
     public String viewData(@ModelAttribute("user") User user, Model model) {
-        Student student = studentDao.studentByUserId(user.getId());
+        long userId = 3;
+        Student student = studentDao.studentByUserId(userId);
 
         model.addAttribute("student", student);
 
-        model.addAttribute("courses", new ArrayList<>());
+        model.addAttribute("courses", studentCourseDao.getCoursesByStudentId(student.getId()));
         model.addAttribute("examResults", new ArrayList<>());
         return "student";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/updateStudent", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String savePedagogue(@RequestBody Student student, HttpSession session) {
+        User user = student.getUser();
+//        long userId = (long) session.getAttribute("user_id");
+        long userId = 3;
+        user.setId(userId);
+
+        return (userDao.update(user) && studentDao.update(student)) ? new Gson().toJson(student) : new Gson().toJson("Something went wrong!");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getExams", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getStudents(@RequestParam("courseId") long courseId) {
+        List<Exam> exams = examDao.examByCourse(courseId);
+        if (exams.isEmpty())
+            return new Gson().toJson("This course doesn't have exams!");
+        else
+            return new Gson().toJson(exams);
     }
 
     /**
