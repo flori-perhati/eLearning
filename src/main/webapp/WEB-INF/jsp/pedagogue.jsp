@@ -14,7 +14,7 @@
     <!-- Our Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/style5.css"/>">
     <%--        <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">--%>
-    <link rel="stylesheet" type="text/css" href="<c:url value="/css/form1.css"/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/radio.css"/>">
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/checkbox.css"/>">
 

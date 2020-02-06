@@ -176,10 +176,10 @@ $(document).ready(function () {
     }
 
     function hideLoader() {
-        $("#loader").css("display", "none");
+        $("#preloader").css("display", "none");
     }
 
     function showLoader() {
-        $("#loader").css("display", "block");
+        $("#preloader").css("display", "block");
     }
 });
