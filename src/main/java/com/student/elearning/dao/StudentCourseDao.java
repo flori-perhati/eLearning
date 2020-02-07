@@ -1,9 +1,6 @@
 package com.student.elearning.dao;
 
-import com.student.elearning.entity.Course;
-import com.student.elearning.entity.ExamQuestion;
-import com.student.elearning.entity.StudentCourse;
-import com.student.elearning.entity.User;
+import com.student.elearning.entity.*;
 import com.student.elearning.mapper.StudentCourseMapper;
 import com.student.elearning.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +36,24 @@ public class StudentCourseDao extends JdbcDaoSupport {
     }
 
     public List<Course> getCoursesByStudentId(long studentId) {
-        String sql = "SELECT c.* FROM student_course sc " +
+        String sql = "SELECT c.*, p.first_name, p.last_name FROM student_course sc " +
                 "LEFT JOIN course c ON c.id = sc.course_id " +
+                "LEFT JOIN pedagogue p ON p.id = c.pedagogue_id " +
                 "WHERE sc.student_id = ?";
         Object[] params = new Object[] {studentId};
         return template.query(sql, params, resultSet -> {
             List<Course> courses = new ArrayList<>();
             while(resultSet.next()) {
+                Pedagogue pedagogue = new Pedagogue();
+                pedagogue.setFirstName(resultSet.getString("first_name"));
+                pedagogue.setLastName(resultSet.getString("last_name"));
+
                 Course course = new Course();
                 course.setId(resultSet.getInt("id"));
                 course.setPedagogueId(resultSet.getInt("pedagogue_id"));
                 course.setDescription(resultSet.getString("description"));
+                course.setPedagogue(pedagogue);
+
                 courses.add(course);
             }
             return courses;
@@ -59,6 +63,12 @@ public class StudentCourseDao extends JdbcDaoSupport {
     public List<StudentCourse> studentCourses(long courseId, long studentId) {
         String sql = "SELECT * FROM student_course WHERE course_id = ? AND student_id = ?";
         Object[] params = new Object[] {courseId,  studentId};
+        template.query(sql, params, new ResultSetExtractor<List<StudentCourse>>() {
+            @Override
+            public List<StudentCourse> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                return null;
+            }
+        });
         return template.query(sql, params, new StudentCourseMapper());
     }
 }

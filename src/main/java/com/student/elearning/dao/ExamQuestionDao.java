@@ -30,9 +30,9 @@ public class ExamQuestionDao extends JdbcDaoSupport {
         return template.update(sql, params) == 1;
     }
 
-    public List<ExamQuestion> examQuestionByExam(long examId) {
-        String sql = "SELECT eq.*, q.value FROM exam_question eq" +
-                "LEFT JOIN question q ON q.id = eq.question_id" +
+    public List<ExamQuestion> examQuestionByExamId(long examId) {
+        String sql = "SELECT eq.*, q.value FROM exam_question eq " +
+                "LEFT JOIN question q ON q.id = eq.question_id " +
                 "WHERE exam_id = ?";
         Object[] params = new Object[] {examId};
         return template.query(sql, params, resultSet -> {
@@ -42,7 +42,7 @@ public class ExamQuestionDao extends JdbcDaoSupport {
                 examQuestion.setId(resultSet.getInt("id"));
                 examQuestion.setExamId(resultSet.getInt("exam_id"));
                 examQuestion.setQuestionId(resultSet.getInt("question_id"));
-                examQuestion.setQuestionPoints(resultSet.getDouble("question_points"));
+                examQuestion.setQuestionPoints(resultSet.getDouble("points"));
                 examQuestion.setQuestionDescription(resultSet.getString("value"));
                 examQuestions.add(examQuestion);
             }

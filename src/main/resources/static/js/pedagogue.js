@@ -82,14 +82,18 @@ $(document).ready(function () {
     });
 
     $('.add-student-to-course').click(function () {
-        $('#selected-course').text($('.add-student-to-course').data("description"));
+        let description = $(this).attr("description");
+        let courseId = $(this).attr("courseId");
+        let facultyId = $(this).attr("facultyId");
+
+        $('#selected-course').text(description);
         addStudentsForm.show();
 
         $.ajax({
             type: "GET",
             contentType: "application/json",
-            url: "/getStudents",//?pedagogueId=" + $('#addExam').data("value"),
-            data: {courseId: $('.add-student-to-course').data("value"), facultyId: $('.add-student-to-course').data("faculty")},
+            url: "/getStudents",
+            data: {courseId: courseId, facultyId: facultyId},
             dataType: 'json'
         }).done(function(response){
             if (response === "There are no students inserted!")

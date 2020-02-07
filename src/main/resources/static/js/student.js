@@ -6,6 +6,7 @@ $(document).ready(function () {
     let courseTable = $('#course-table');
     let exams = $('#exams');
     let examTable = $('#exam-table');
+    let examForm = $('#exam-form');
 
     let firstName = $('#student-first-name');
     let lastName = $('#student-last-name');
@@ -21,6 +22,7 @@ $(document).ready(function () {
     studentForm.show();
     courseTable.hide();
     exams.hide();
+    examForm.hide();
 
     $("#answer-label").hide();
 
@@ -144,19 +146,30 @@ $(document).ready(function () {
         $.ajax({
             type: "GET",
             contentType: "application/json",
-            url: "/getExam",
+            url: "/getExamData",
             data: {examId: $(this).closest('tr').attr("val")},
             dataType: 'json'
         }).done(function(response){
             if (response === "Something went wrong!")
                 alert(response);
             else {
+                alert("Success");
                 // generate exam
             }
         }).fail(function(e) {
             console.log(e);
         });
     });
+
+    function showExam(question) {
+        let examView = '<div><div id="' + question.id + '"></div><table class="table" id="exam-questions" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">' +
+            '<thead class="thead-light"><tr>' +
+            '<th scope="col" style="width: 10%">Add</th><th scope="col" style="width: 90%">Student</th>' +
+            '</tr></thead>\n' +
+            '<tbody>' +
+            '</tbody>' +
+            '</table></div>';
+    }
 
     function disableProfile() {
         firstName.attr('disabled','disabled');

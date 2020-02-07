@@ -121,7 +121,7 @@
                 <tr>
                     <td style="width: 85%">${course.description}</td>
                     <td>
-                        <a data-value="${course.id}" data-description="${course.description}" data-faculty="${pedagogue.facultyId}" class="add-student-to-course"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
+                        <a courseId="${course.id}" description="${course.description}" facultyId="${pedagogue.facultyId}" class="add-student-to-course"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
                     </td>
                 </tr>
             </c:forEach>
@@ -154,7 +154,7 @@
                     <td>${exam.header}</td>
                     <td>${exam.description}</td>
                     <td>
-                        <a data-value="${exam}" class="add-student-to-course"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
+                        <a data-value="${exam}"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
                     </td>
                 </tr>
             </c:forEach>

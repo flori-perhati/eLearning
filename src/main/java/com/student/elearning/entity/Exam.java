@@ -13,6 +13,7 @@ public class Exam {
     private Course course;
     private Pedagogue pedagogue;
     private List<Question> questions;
+    private List<ExamQuestion> examQuestions;
 
     public long getId() {
         return id;
@@ -76,5 +77,13 @@ public class Exam {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public List<ExamQuestion> getExamQuestions() {
+        return examQuestions;
+    }
+
+    public void setExamQuestions(List<ExamQuestion> examQuestions) {
+        this.examQuestions = examQuestions;
     }
 }

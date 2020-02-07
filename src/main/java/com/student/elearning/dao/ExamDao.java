@@ -76,19 +76,14 @@ public class ExamDao extends JdbcDaoSupport {
     public List<Exam> examByCourse(long courseId) {
         String sql = "SELECT * FROM exam WHERE course_id = ?";
         Object[] params = new Object[] {courseId};
-        return template.query(sql, params, resultSet -> {
-            List<Exam> exams = new ArrayList<>();
-            while (resultSet.next()) {
-                Exam exam = new Exam();
-                exam.setId(resultSet.getInt("id"));
-                exam.setCourseId(resultSet.getInt("course_id"));
-                exam.setPedagogueId(resultSet.getInt("pedagogue_id"));
-                exam.setHeader(resultSet.getString("header"));
-                exam.setDescription(resultSet.getString("description"));
-                exams.add(exam);
-            }
-            return exams;
-        });
+        return template.query(sql, params, new ExamMapper());
+    }
+
+    public Exam examById(long examId) {
+        String sql = "SELECT * FROM exam WHERE id = ?";
+        Object[] params = new Object[] {examId};
+        List<Exam> exams = template.query(sql, params, new ExamMapper());
+        return exams.isEmpty() ? null : exams.get(0);
     }
 
     public Exam lastExam() {

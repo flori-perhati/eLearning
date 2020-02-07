@@ -2,10 +2,7 @@ package com.student.elearning.controller;
 
 import com.google.gson.Gson;
 import com.student.elearning.dao.*;
-import com.student.elearning.entity.Exam;
-import com.student.elearning.entity.Pedagogue;
-import com.student.elearning.entity.Student;
-import com.student.elearning.entity.User;
+import com.student.elearning.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -20,6 +17,8 @@ import java.util.List;
 @RequestMapping("")
 public class StudentController {
 
+    @Autowired
+    ExamQuestionDao examQuestionDao;
     @Autowired
     StudentCourseDao studentCourseDao;
     @Autowired
@@ -78,12 +77,27 @@ public class StudentController {
 
     @ResponseBody
     @RequestMapping(value = "/getExams", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getStudents(@RequestParam("courseId") long courseId) {
+    public String getExams(@RequestParam("courseId") long courseId) {
         List<Exam> exams = examDao.examByCourse(courseId);
         if (exams.isEmpty())
             return new Gson().toJson("This course doesn't have exams!");
         else
             return new Gson().toJson(exams);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getExamData", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getExamData(@RequestParam("examId") long examId) {
+        Exam exam = examDao.examById(examId);
+        if (exam != null) {
+            List<ExamQuestion> examQuestions = examQuestionDao.examQuestionByExamId(exam.getId());
+            if (!examQuestions.isEmpty()) {
+                exam.setExamQuestions(examQuestions);
+                return new Gson().toJson(exam);
+            }
+        }
+
+        return new Gson().toJson("Something went wrong!");
     }
 
     /**

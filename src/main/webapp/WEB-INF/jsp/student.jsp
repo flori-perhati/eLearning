@@ -97,11 +97,14 @@
         <div>
             <table id="course-table" class="table" style="float: left; width: 35%; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
                 <thead class="thead-light"><tr>
-                    <th scope="col" hidden>Course Id</th><th scope="col">Course Description</th>
+                    <th scope="col">Course Description</th><th scope="col">Pedagogue</th>
                 </tr></thead>
                 <tbody>
                 <c:forEach var="course" items="${courses}">
-                    <tr class="course-row" val="${course.id}" val1="${course.description}"><td hidden>${course.id}</td><td>${course.description}</td></tr>
+                    <tr class="course-row" val="${course.id}" val1="${course.description}">
+                        <td>${course.description}</td>
+                        <td>${course.pedagogue.firstName + ' ' + course.pedagogue.lastName}</td>
+                    </tr>
                 </c:forEach>
                 </tbody>
             </table>
@@ -122,6 +125,18 @@
             </div>
 
         </div>
+
+        <form id="exam-form" class="login-block" method="post" style="width: 50%;margin-top: 50px">
+            <h1 style="text-align: center" id="exam-header"></h1><br><br>
+            <div id="exam-description" style="margin-top:20px; margin-bottom: 20px"></div>
+            <div style="margin-top:20px; margin-bottom: 20px">Questions</div>
+
+            <div id="exam-questions">
+
+            </div>
+
+            <button id="submit-exam" type="submit" style="float: right; width: 20%">Submit</button>
+        </form>
 
 <%--        <div id="loader"></div>--%>
         <div id="preloader">
