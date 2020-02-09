@@ -194,7 +194,7 @@ public class StudentDao extends JdbcDaoSupport {
                 student.setLastName(resultSet.getString("last_name"));
 
                 if (studentCourseDao.studentCourses(student.getId(), courseId).isEmpty())
-                    students.add(student);
+                    students.add(student.setCourseId(courseId));
             }
             return students;
         });

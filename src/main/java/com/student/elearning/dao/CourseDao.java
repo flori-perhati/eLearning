@@ -64,19 +64,14 @@ public class CourseDao extends JdbcDaoSupport {
     public List<Course> getCoursesByPedagogueId(long pedagogueId) {
         String sql = "SELECT * FROM course WHERE pedagogue_id = ?";
         Object[] params = new Object[] {pedagogueId};
-        return template.query(sql, params, new ResultSetExtractor<List<Course>>() {
-            public List<Course> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                List<Course> courses = new ArrayList<>();
-                while(resultSet.next()) {
-                    Course course = new Course();
-                    course.setId(resultSet.getInt("id"));
-                    course.setPedagogueId(resultSet.getInt("pedagogue_id"));
-                    course.setDescription(resultSet.getString("description"));
-                    courses.add(course);
-                }
-                return courses;
-            }
-        });
+        return template.query(sql, params, new CourseMapper());
+    }
+
+    public Course getCourseById(long courseId) {
+        String sql = "SELECT * FROM course WHERE id = ?";
+        Object[] params = new Object[] {courseId};
+        List<Course> courses = template.query(sql, params, new CourseMapper());
+        return courses.isEmpty() ? null : courses.get(0);
     }
 
     public Course lastCourse() {

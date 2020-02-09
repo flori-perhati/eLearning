@@ -1,138 +1,127 @@
 package com.student.elearning.controller;
 
 import com.google.gson.Gson;
-import com.student.elearning.dao.*;
-import com.student.elearning.entity.*;
+import com.student.elearning.dao.StudentCourseDao;
+import com.student.elearning.dao.StudentDao;
+import com.student.elearning.dao.UserDao;
+import com.student.elearning.entity.Student;
+import com.student.elearning.entity.User;
+import com.student.elearning.network.Response;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("")
 public class StudentController {
 
-    @Autowired
-    ExamQuestionDao examQuestionDao;
-    @Autowired
-    StudentCourseDao studentCourseDao;
-    @Autowired
-    StudentDao studentDao;
-    @Autowired
-    FacultyDao facultyDao;
-    @Autowired
-    CourseDao courseDao;
-    @Autowired
-    ExamDao examDao;
-    @Autowired
-    UserDao userDao;
-
-//    @RequestMapping("/pedagogue")
-//    public String pedagogue(Model model, HttpSession session) {
-////        long userId = (long) session.getAttribute("user_id");
-//        long userId = 2;
-//        Pedagogue pedagogue = pedagogueDao.pedagogueByUserId(userId);
-//
-//        model.addAttribute("pedagogue", pedagogue);
-//        model.addAttribute("courses", courseDao.getCoursesByPedagogueId(pedagogue.getId()));
-//        model.addAttribute("exams", examDao.examByPedagogue(pedagogue.getId()));
-//        model.addAttribute("students", new ArrayList<>());
-//        model.addAttribute("questions", new ArrayList<>());
-//        model.addAttribute("faculties", facultyDao.getFaculties());
-//        return "pedagogue";
-//    }
+    /** Backend implementation of CRUD operation and other queries */
+    @Autowired UserDao userDao;
+    @Autowired StudentDao studentDao;
+    @Autowired StudentCourseDao studentCourseDao;
 
     /**
      * Shows the view when a student is logged in
+     * @param user [logged in] redirected from SignInController
      * @param model type Model used for adding parameters to the view
-     * @return student_view
+     * @return student_view or redirect to sign_in view is user isn't remembered
      */
     @RequestMapping("/student")
-    public String viewData(@ModelAttribute("user") User user, Model model) {
-        long userId = 3;
-        Student student = studentDao.studentByUserId(userId);
-
-        model.addAttribute("student", student);
-
-        model.addAttribute("courses", studentCourseDao.getCoursesByStudentId(student.getId()));
-        model.addAttribute("examResults", new ArrayList<>());
-        return "student";
+    public String viewData(@ModelAttribute("student_user") User user, Model model) {
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session =  attr.getRequest().getSession(true);
+        return studentView(model, 3);
+//        if (session.getAttribute("user_id") != null && session.getAttribute("user_status") != null && session.getAttribute("user_status").toString().equals("student")) {
+//            long userId = Long.parseLong(session.getAttribute("user_id").toString());
+//            return studentView(model, userId);
+//        } else if (user.getId() != 0)
+//            return studentView(model, user.getId());
+//        else
+//            return "redirect:/accounts/sign_in";
     }
 
+    /**
+     * Insert new Student
+     * @param student represents new student to be inserted
+     * @return json response
+     */
     @ResponseBody
-    @RequestMapping(value = "/updateStudent", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String savePedagogue(@RequestBody Student student, HttpSession session) {
-        User user = student.getUser();
-//        long userId = (long) session.getAttribute("user_id");
-        long userId = 3;
-        user.setId(userId);
+    @RequestMapping(value = "/student/insert", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String insert(@RequestBody Student student) {
+        Response<Student> response = new Response<>();
 
-        return (userDao.update(user) && studentDao.update(student)) ? new Gson().toJson(student) : new Gson().toJson("Something went wrong!");
-    }
+        User user = new User();
+        user.setUsername(student.getFirstName().substring(0, 1) + "" + student.getLastName());
+        user.setPassword(student.getFirstName().substring(0, 1) + "" + student.getLastName());
+        user.setUserStatus("student");
 
-    @ResponseBody
-    @RequestMapping(value = "/getExams", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getExams(@RequestParam("courseId") long courseId) {
-        List<Exam> exams = examDao.examByCourse(courseId);
-        if (exams.isEmpty())
-            return new Gson().toJson("This course doesn't have exams!");
-        else
-            return new Gson().toJson(exams);
-    }
+        if (userDao.insert(user)) {
+            student.setFacultyId(student.getFacultyId());
+            student.setUserId(userDao.lastUser().getId());
+            student.setStatus(true);
 
-    @ResponseBody
-    @RequestMapping(value = "/getExamData", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getExamData(@RequestParam("examId") long examId) {
-        Exam exam = examDao.examById(examId);
-        if (exam != null) {
-            List<ExamQuestion> examQuestions = examQuestionDao.examQuestionByExamId(exam.getId());
-            if (!examQuestions.isEmpty()) {
-                exam.setExamQuestions(examQuestions);
-                return new Gson().toJson(exam);
+            if (studentDao.insert(student)) {
+                response.setResponseCode(201);
+                response.setResponseMessage("Created");
+                response.setT(studentDao.getLastStudent());
+                return new Gson().toJson(response);
             }
         }
 
-        return new Gson().toJson("Something went wrong!");
+        response.setResponseCode(500);
+        response.setResponseMessage("Internal Server Error");
+        response.setT(null);
+        return new Gson().toJson(response);
     }
 
     /**
-     * Shows the view for inserting new Student to db
-     * @param model type Model used for adding parameters to the view
-     * @return path to the specific view
+     * Updates the logged in student
+     * @param student filled with new field values
+     * @return json response
      */
-    @RequestMapping("/addStudent")
-    public String show(Model model) {
-        model.addAttribute("student", new Student());
-        model.addAttribute("faculties", facultyDao.getFaculties());
-        return "add_student_view";
+    @ResponseBody
+    @RequestMapping(value = "/student/update", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String update(@RequestBody Student student) {
+        Response<Student> response = new Response<>();
+
+        if (userDao.update(student.getUser()) && studentDao.update(student)) {
+            response.setResponseCode(200);
+            response.setResponseMessage("OK");
+            response.setT(student);
+            return new Gson().toJson(response);
+        }
+
+        response.setResponseCode(500);
+        response.setResponseMessage("Internal Server Error");
+        response.setT(null);
+        return new Gson().toJson(response);
     }
 
     /**
-     * Shows the view for updating the student selected
-     * @param id used for getting Student details
-     * @param model type Model used for adding parameters to the view
-     * @return path to the specific view
+     * Delete the selected Student
+     * @param id gives student id selected to delete
+     * @return to admin view
      */
-    @RequestMapping(value="/editStudent/{id}")
-    public String editStudent(@PathVariable int id, Model model){
-//        model.addAttribute("student", studentDao.studentDetailsToEdit(id));
-        return "edit_student_view";
+    @RequestMapping(value="/student/delete/{id}", method = RequestMethod.GET)
+    public String delete(@PathVariable int id) {
+        studentDao.updateStatus(0, id);
+        return "redirect:/admin";
     }
 
-    /**
-     * Updates the modified student
-     * @param student type Student filled with new data
-     * @return to admin_view to see the changes that have been made
-     */
-    @RequestMapping(value="/editStudent/updateStudent", method = RequestMethod.POST)
-    public String updateStudent(@ModelAttribute("student") Student student){
-        studentDao.update(student);
-        userDao.update(student.getUser());
-        return "redirect:/admin_view";
+    private String studentView(Model model, long userId) {
+        Student student = studentDao.studentByUserId(userId);
+
+        model.addAttribute("student", student);
+        model.addAttribute("courses", studentCourseDao.getCoursesByStudentId(student.getId()));
+        model.addAttribute("examResults", new ArrayList<>());
+        return "student";
     }
 }

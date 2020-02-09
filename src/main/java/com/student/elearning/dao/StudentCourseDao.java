@@ -44,16 +44,11 @@ public class StudentCourseDao extends JdbcDaoSupport {
         return template.query(sql, params, resultSet -> {
             List<Course> courses = new ArrayList<>();
             while(resultSet.next()) {
-                Pedagogue pedagogue = new Pedagogue();
-                pedagogue.setFirstName(resultSet.getString("first_name"));
-                pedagogue.setLastName(resultSet.getString("last_name"));
-
                 Course course = new Course();
                 course.setId(resultSet.getInt("id"));
                 course.setPedagogueId(resultSet.getInt("pedagogue_id"));
                 course.setDescription(resultSet.getString("description"));
-                course.setPedagogue(pedagogue);
-
+                course.setPedagogueFullName(resultSet.getString("first_name") + " " + resultSet.getString("last_name"));
                 courses.add(course);
             }
             return courses;

@@ -81,17 +81,16 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/savePedagogue",
+            url: "/pedagogue/insert",
             data: JSON.stringify(pedagogue),
             dataType: 'json'
         }).done(function(response){
-            if (response === "Something went wrong!")
-                alert(response);
-            else {
+            if (response.responseCode === 201) {
                 pedagogueForm.trigger("reset");
-                $('#pedagogue-table tr:last').after(insertPedagogueRow(response));
+                $('#pedagogue-table tr:last').after(insertPedagogueRow(response.t));
                 alert("Success!");
-            }
+            } else
+                alert(response.responseMessage);
         }).fail(function(e) {
             console.log(e);
         });
@@ -110,17 +109,16 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/saveStudent",
+            url: "/student/insert",
             data: JSON.stringify(student),
             dataType: 'json'
         }).done(function(response){
-            if (response === "Something went wrong!")
-                alert(response);
-            else {
+            if (response.responseCode === 201) {
                 studentForm.trigger("reset");
-                $('#student-table tr:last').after(insertStudentRow(response));
+                $('#student-table tr:last').after(insertStudentRow(response.t));
                 alert("Success!");
-            }
+            } else
+                alert(response.responseMessage);
         }).fail(function(e) {
             console.log(e);
         });
@@ -128,16 +126,16 @@ $(document).ready(function () {
 
     function insertPedagogueRow(pedagogue) {
         return '<tr>' +
-                    '<td>' + pedagogue.firstName +'</td>' +
-                    '<td>' + pedagogue.lastName + '</td>' +
-                    '<td>' + pedagogue.faculty.description + '</td>' +
-                    '<td>' + pedagogue.registrationDate + '</td>' +
-                    '<td>' + pedagogue.user.username + '</td>' +
-                    '<td>' + pedagogue.user.password + '</td>' +
-                    '<td>' +
-                        '<a href="deletePedagogue/"' + pedagogue.id + '" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>'   +
-                    '</td>' +
-                    '</tr>';
+            '<td>' + pedagogue.firstName +'</td>' +
+            '<td>' + pedagogue.lastName + '</td>' +
+            '<td>' + pedagogue.faculty.description + '</td>' +
+            '<td>' + pedagogue.registrationDate + '</td>' +
+            '<td>' + pedagogue.user.username + '</td>' +
+            '<td>' + pedagogue.user.password + '</td>' +
+            '<td>' +
+                '<a href="deletePedagogue/"' + pedagogue.id + '" ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>'   +
+            '</td>' +
+            '</tr>';
     }
 
     function insertStudentRow(student) {
@@ -154,40 +152,3 @@ $(document).ready(function () {
             '</tr>';
     }
 });
-
-// function deletePedagogue(id) {
-//     $.ajax({
-//         type: "POST",
-//         contentType: "application/json",
-//         url: "/deletePedagogue",
-//         data: JSON.stringify(id),
-//         dataType: 'json'
-//     }).done(function(response){
-//         if (response === "error")
-//             alert(response);
-//         else {
-//             $('#student-table tr:last').after(insertStudentRow(response));
-//         }
-//     }).fail(function(e) {
-//         console.log(e);
-//     });
-// }
-//
-// function deleteStudent(id) {
-//     $.ajax({
-//         type: "POST",
-//         contentType: "application/json",
-//         url: "/saveStudent",
-//         data: JSON.stringify(student),
-//         dataType: 'json'
-//     }).done(function(response){
-//         if (response === "Something went wrong!")
-//             alert(response);
-//         else {
-//             studentForm.trigger("reset");
-//             $('#student-table tr:last').after(insertStudentRow(response));
-//         }
-//     }).fail(function(e) {
-//         console.log(e);
-//     });
-// }

@@ -14,6 +14,6 @@ public class AnswerMapper implements RowMapper<Answer> {
         answer.setQuestionId(resultSet.getLong("question_id"));
         answer.setValue(resultSet.getString("value"));
         answer.setCorrect(resultSet.getInt("is_correct") == 1);
-        return null;
+        return answer;
     }
 }

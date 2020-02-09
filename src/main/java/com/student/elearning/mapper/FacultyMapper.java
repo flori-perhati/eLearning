@@ -1,6 +1,6 @@
 package com.student.elearning.mapper;
 
-import com.student.elearning.model.Faculty;
+import com.student.elearning.entity.Faculty;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

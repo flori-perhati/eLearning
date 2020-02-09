@@ -64,7 +64,7 @@
                         <div id="window-header" style="padding-left: 20px"></div>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="nav navbar-nav ml-auto">
-                                <li class="nav-item"><a class="nav-link" id="logout">Logout</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/accounts/sign_out" id="logout">Logout</a></li>
                             </ul>
                         </div>
                     </div>

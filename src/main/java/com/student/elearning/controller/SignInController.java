@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -16,13 +17,16 @@ import javax.validation.Valid;
 @Controller
 public class SignInController {
 
-    @Autowired
-    UserDao userDao;
-    @Autowired
-    StudentDao studentDao;
-    @Autowired
-    PedagogueDao pedagogueDao;
+    /** Implementation of CRUD operation and other queries */
+    @Autowired UserDao userDao;
+    @Autowired StudentDao studentDao;
+    @Autowired PedagogueDao pedagogueDao;
 
+    /**
+     * Shows sign_in view
+     * @param model used for adding attributes to the view
+     * @return sign_in view
+     */
     @RequestMapping(value = "/accounts/sign_in", method = RequestMethod.GET)
     public String loginView(Model model) {
         model.addAttribute("noUser", false);
@@ -30,47 +34,46 @@ public class SignInController {
         return "sign_in";
     }
 
+    /**
+     * Shows specific view based on user status
+     * @param user represents user to be logged in
+     * @param bindingResult used for validation
+     * @param rememberMe used for kepping user logged in
+     * @param session used for to save user to session
+     * @param redirectAttributes used for redirecting attributes to another controller
+     * @return to specific view for the logged user or sign_in view with warning message
+     */
     @RequestMapping(value = "/accounts/sign_in/validate", method = RequestMethod.POST)
-    public String validateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam(value = "remember-me", defaultValue="false") boolean rememberMe, HttpSession session) {
+    public String validateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam(value = "remember-me", defaultValue="false") boolean rememberMe, HttpSession session, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "sign_in";
         } else {
             User loggedUser = userDao.validateUser(user, studentDao, pedagogueDao);
             if (loggedUser != null) {
-                user.setId(loggedUser.getId());
-                user.setUserStatus(loggedUser.getUserStatus());
                 if (rememberMe) {
-                    session.setAttribute("user_id", user.getId());
-                    session.setAttribute("username", user.getUsername());
-                    session.setAttribute("password", user.getPassword());
-                    session.setAttribute("user_status", user.getUserStatus());
+                    session.setAttribute("user_id", loggedUser.getId());
+                    session.setAttribute("username", loggedUser.getUsername());
+                    session.setAttribute("password", loggedUser.getPassword());
+                    session.setAttribute("user_status", loggedUser.getUserStatus());
                     session.setAttribute("remember_me", true);
                 }
-                return "redirect:/admin";
+
+                redirectAttributes.addFlashAttribute(loggedUser.getUserStatus() + "_user", loggedUser);
+                return "redirect:/" + loggedUser.getUserStatus();
             } else
                 return "redirect:/accounts/sign_in/user_does_not_exist";
         }
     }
 
+    /**
+     * Shows negative message when user is not found
+     * @param model used for adding attributes to the view
+     * @return sign_in view with warning message
+     */
     @RequestMapping("/accounts/sign_in/user_does_not_exist")
     public String noUser(Model model) {
         model.addAttribute("noUser", true);
         model.addAttribute("user", new User());
         return "sign_in";
     }
-
-//    @ResponseBody
-//    @RequestMapping(value = "/validateUser", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public String validateUser(@RequestBody User user, RedirectAttributes redirectAttributes) {
-//        User loggedUser = userDao.validateUser(user);
-//        String response;
-//        if (loggedUser != null) {
-//            user.setId(loggedUser.getId());
-//            user.setUserStatus(loggedUser.getUserStatus());
-//            response = loggedUser.getUserStatus();
-//        } else
-//            response = "not_found";
-//
-//        return new Gson().toJson(response);
-//    }
 }

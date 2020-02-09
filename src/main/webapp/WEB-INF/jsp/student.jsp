@@ -13,7 +13,7 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
     <!-- Our Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/style5.css"/>">
-    <%--        <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">--%>
+
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/radio.css"/>">
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/checkbox.css"/>">
@@ -55,7 +55,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="nav navbar-nav ml-auto">
                         <li class="nav-item active"><a class="nav-link" id="profile">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" id="logout">Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/accounts/sign_out" id="logout">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -91,10 +91,10 @@
                     <td style="padding-left: 10px"><label for="student-password"></label><input value="${student.user.password}" id="student-password" type="text" required/></td>
                 </tr>
             </table>
-            <button id="submit-student" type="submit" value="${student.id}" style="float: right; width: 30%">Save Changes</button>
+            <button id="submit-student" type="submit" value="${student.id}" userId="${student.userId}" style="float: right; width: 30%">Save Changes</button>
         </form>
 
-        <div>
+        <div id="course-exams">
             <table id="course-table" class="table" style="float: left; width: 35%; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
                 <thead class="thead-light"><tr>
                     <th scope="col">Course Description</th><th scope="col">Pedagogue</th>
@@ -103,7 +103,7 @@
                 <c:forEach var="course" items="${courses}">
                     <tr class="course-row" val="${course.id}" val1="${course.description}">
                         <td>${course.description}</td>
-                        <td>${course.pedagogue.firstName + ' ' + course.pedagogue.lastName}</td>
+                        <td>${course.pedagogueFullName}</td>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -119,15 +119,14 @@
                         <th scope="col" style="width: 40%">Header</th><th scope="col" style="width: 60%">Description</th>
                     </tr></thead>
                     <tbody>
-<%--                        <tr><td>${course.description}</td><td>${course.description}</td></tr>--%>
                     </tbody>
                 </table>
             </div>
 
         </div>
 
-        <form id="exam-form" class="login-block" method="post" style="width: 50%;margin-top: 50px">
-            <h1 style="text-align: center" id="exam-header"></h1><br><br>
+        <form id="exam-form" class="login-block" method="post" style="width: 75%;margin-top: 50px">
+            <h1 style="text-align: center" id="exam-header"></h1>
             <div id="exam-description" style="margin-top:20px; margin-bottom: 20px"></div>
             <div style="margin-top:20px; margin-bottom: 20px">Questions</div>
 

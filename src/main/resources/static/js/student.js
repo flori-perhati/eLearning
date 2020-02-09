@@ -28,6 +28,10 @@ $(document).ready(function () {
 
     disableProfile();
 
+    /**
+     * Actions
+     */
+
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
         $(this).toggleClass('active');
@@ -69,17 +73,23 @@ $(document).ready(function () {
         // warning.html("");
     });
 
+    /**
+     * Form submit
+     */
+
     studentForm.submit(function(event) {
         event.preventDefault();
 
         let student = {};
         let user = {};
         student['id'] = $('#submit-student').val();
+        student['userId'] = $('#submit-student').attr('userId');
         student['firstName'] = firstName.val();
         student['lastName'] = lastName.val();
         student['birthdate'] = birthdate.val();
         student['gender'] = gender.val();
 
+        user['id'] = $('#submit-student').attr('userId');
         user['username'] = username.val();
         user['password'] = password.val();
         student['user'] = user;
@@ -87,22 +97,21 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/updateStudent",
+            url: "/student/update",
             data: JSON.stringify(student),
             dataType: 'json'
         }).done(function(response){
-            if (response === "Something went wrong!")
-                alert(response);
-            else {
-                firstName.html(response.firstName);
-                lastName.html(response.lastName);
-                birthdate.html(response.birthdate);
-                gender.html(response.gender);
-                username.html(response.user.username);
-                password.html(response.user.password);
+            if (response.responseCode === 200) {
+                firstName.html(response.t.firstName);
+                lastName.html(response.t.lastName);
+                birthdate.html(response.t.birthdate);
+                gender.html(response.t.gender);
+                username.html(response.t.user.username);
+                password.html(response.t.user.password);
 
                 disableProfile();
-            }
+            } else
+                alert(response.responseMessage);
         }).fail(function(e) {
             console.log(e);
         });
@@ -116,22 +125,22 @@ $(document).ready(function () {
         $.ajax({
             type: "GET",
             contentType: "application/json",
-            url: "/getExams",
+            url: "/exams",
             data: {courseId: $(this).closest('tr').attr("val")},
             dataType: 'json'
         }).done(function(response){
             $("#exam-table tbody").empty();
-            if (response === "This course doesn't have exams!") {
-                examTable.hide();
-                examError.show();
-                examError.html(response);
-            } else {
+            if (response.responseCode === 200) {
                 examTable.show();
                 examError.hide();
                 $("#exam-table tbody").empty();
-                response.forEach(function (exam) {
+                response.t.forEach(function (exam) {
                     $('#exam-table tbody').append(insertExamRow(exam));
                 });
+            } else {
+                examTable.hide();
+                examError.show();
+                examError.html(response);
             }
             hideLoader();
         }).fail(function(e) {
@@ -139,27 +148,33 @@ $(document).ready(function () {
         });
     });
 
+    // TODO
     examTable.on("click", "td", function() {
-        exams.show();
-        alert($(this).closest('tr').attr("val"));
-
+        header.html('Exam');
         $.ajax({
             type: "GET",
             contentType: "application/json",
-            url: "/getExamData",
+            url: "/exam/details",
             data: {examId: $(this).closest('tr').attr("val")},
             dataType: 'json'
         }).done(function(response){
-            if (response === "Something went wrong!")
-                alert(response);
-            else {
-                alert("Success");
-                // generate exam
-            }
+            if (response.responseCode === 200) {
+                exams.hide();
+                $('#course-exams').hide();
+                examForm.show();
+                alert(response.responseMessage);
+                $('#exam-header').html(response.t.header);
+                $('#exam-description').html(response.t.description);
+            } else
+                alert(response.responseMessage);
         }).fail(function(e) {
             console.log(e);
         });
     });
+
+    /**
+     * Private methods | Radio event listener
+     */
 
     function showExam(question) {
         let examView = '<div><div id="' + question.id + '"></div><table class="table" id="exam-questions" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">' +
@@ -169,6 +184,18 @@ $(document).ready(function () {
             '<tbody>' +
             '</tbody>' +
             '</table></div>';
+    }
+
+    function question(answer) {
+
+    }
+
+    function singleChoice(answer) {
+
+    }
+
+    function multipleChoice(answer) {
+
     }
 
     function disableProfile() {

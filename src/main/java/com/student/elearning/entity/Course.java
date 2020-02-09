@@ -11,6 +11,8 @@ public class Course {
     private Pedagogue pedagogue;
     private List<Student> students;
 
+    private String pedagogueFullName;
+
     public long getId() {
         return id;
     }
@@ -49,5 +51,13 @@ public class Course {
 
     public void setStudents(List<Student> students) {
         this.students = students;
+    }
+
+    public String getPedagogueFullName() {
+        return pedagogueFullName;
+    }
+
+    public void setPedagogueFullName(String pedagogueFullName) {
+        this.pedagogueFullName = pedagogueFullName;
     }
 }

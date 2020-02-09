@@ -67,7 +67,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="nav navbar-nav ml-auto">
                         <li class="nav-item active"><a class="nav-link" id="profile">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" id="logout">Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/accounts/sign_out" id="logout">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                     <td style="padding-left: 10px"><label for="pedagogue-password"></label><input value="${pedagogue.user.password}" id="pedagogue-password" type="text" required/></td>
                 </tr>
             </table>
-            <button id="submit-pedagogue" type="submit" value="${pedagogue.id}" style="float: right; width: 30%">Save Changes</button>
+            <button id="submit-pedagogue" type="submit" value="${pedagogue.id}" userId="${pedagogue.userId}" style="float: right; width: 30%">Save Changes</button>
         </form>
 
         <form id="course-form" class="login-block" method="post" style="width: 100%;margin-bottom: 50px">
@@ -154,7 +154,7 @@
                     <td>${exam.header}</td>
                     <td>${exam.description}</td>
                     <td>
-                        <a data-value="${exam}"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
+                        <a examId="${exam.id}" class="exam-results"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
                     </td>
                 </tr>
             </c:forEach>
@@ -168,7 +168,7 @@
             <div style="margin-bottom: 10px">Exam Description</div>
             <label for="exam-description"></label><textarea id="exam-description" type="text" required></textarea>
             <div style="margin-bottom: 10px">Course</div>
-            <label for="faculty"></label><select id="faculty" required>
+            <label for="course"></label><select id="course" required>
             </select>
 
             <table class="table" id="questions-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);margin-top: 40px">
@@ -181,6 +181,20 @@
 
             <button value="${pedagogue.id}" id="submit-exam" type="submit" style="float: right; width: 20%">Submit</button>
         </form>
+
+        <table id="question-table" class="table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+            <thead class="thead-light"><tr>
+                <th scope="col" style="width: 20%">Type</th><th scope="col">Description</th>
+            </tr></thead>
+            <tbody>
+            <c:forEach var="question" items="${questions}">
+                <tr>
+                    <td>${question.questionType}</td>
+                    <td>${question.value}</td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
 
         <form id="question-form" class="login-block" method="post" style="width: 75%;margin-bottom: 60px">
             <h1>Create Question</h1>

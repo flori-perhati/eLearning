@@ -21,6 +21,8 @@ public class Student {
     private List<Course> courses;
     private List<Exam> exams;
 
+    private long courseId;
+
     public long getId() {
         return id;
     }
@@ -123,5 +125,18 @@ public class Student {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public long getCourseId() {
+        return courseId;
+    }
+
+    public Student setCourseId(long courseId) {
+        this.courseId = courseId;
+        return this;
     }
 }
