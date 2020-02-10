@@ -128,11 +128,12 @@
         <form id="exam-form" class="login-block" method="post" style="width: 75%;margin-top: 50px">
             <h1 style="text-align: center" id="exam-header"></h1>
             <div id="exam-description" style="margin-top:20px; margin-bottom: 20px"></div>
-            <div style="margin-top:20px; margin-bottom: 20px">Questions</div>
+            <div style="margin-top:20px; margin-bottom: 20px" id="questions-number" >Questions</div>
 
-            <div id="exam-questions">
-
-            </div>
+            <table id="question-table" class="table" style="margin-top: 20px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+                <tbody>
+                </tbody>
+            </table>
 
             <button id="submit-exam" type="submit" style="float: right; width: 20%">Submit</button>
         </form>

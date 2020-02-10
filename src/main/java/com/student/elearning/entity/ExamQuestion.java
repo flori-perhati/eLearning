@@ -1,5 +1,7 @@
 package com.student.elearning.entity;
 
+import java.util.List;
+
 public class ExamQuestion {
 
     private long id;
@@ -7,7 +9,10 @@ public class ExamQuestion {
     private long questionId;
     private double questionPoints;
 
+    private List<Answer> answers;
+
     private String questionDescription;
+    private String questionType;
 
     public long getId() {
         return id;
@@ -41,11 +46,27 @@ public class ExamQuestion {
         this.questionPoints = questionPoints;
     }
 
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
+
     public String getQuestionDescription() {
         return questionDescription;
     }
 
     public void setQuestionDescription(String questionDescription) {
         this.questionDescription = questionDescription;
+    }
+
+    public String getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(String questionType) {
+        this.questionType = questionType;
     }
 }

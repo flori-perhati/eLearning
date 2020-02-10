@@ -1,6 +1,7 @@
 package com.student.elearning.controller;
 
 import com.google.gson.Gson;
+import com.student.elearning.dao.AnswerDao;
 import com.student.elearning.dao.CourseDao;
 import com.student.elearning.dao.ExamDao;
 import com.student.elearning.dao.ExamQuestionDao;
@@ -21,6 +22,7 @@ public class ExamController {
 
     /** Implementation of CRUD operation and other queries */
     @Autowired CourseDao courseDao;
+    @Autowired AnswerDao answerDao;
     @Autowired ExamDao examDao;
     @Autowired ExamQuestionDao examQuestionDao;
 
@@ -92,7 +94,7 @@ public class ExamController {
 
         Exam exam = examDao.examById(examId);
         if (exam != null) {
-            List<ExamQuestion> examQuestions = examQuestionDao.examQuestionByExamId(exam.getId());
+            List<ExamQuestion> examQuestions = examQuestionDao.examQuestionByExamId(exam.getId(), answerDao);
             if (!examQuestions.isEmpty()) {
                 exam.setExamQuestions(examQuestions);
                 response.setResponseCode(200);

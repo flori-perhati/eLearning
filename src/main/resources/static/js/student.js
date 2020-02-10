@@ -165,6 +165,12 @@ $(document).ready(function () {
                 alert(response.responseMessage);
                 $('#exam-header').html(response.t.header);
                 $('#exam-description').html(response.t.description);
+                let index = 1;
+                response.t.examQuestions.forEach(function (examQuestion) {
+                    $('#question-table tbody').append(showQuestions(examQuestion, index));
+                    index++;
+                });
+                $('#questions-number').attr('nr', index);
             } else
                 alert(response.responseMessage);
         }).fail(function(e) {
@@ -176,26 +182,46 @@ $(document).ready(function () {
      * Private methods | Radio event listener
      */
 
-    function showExam(question) {
-        let examView = '<div><div id="' + question.id + '"></div><table class="table" id="exam-questions" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">' +
-            '<thead class="thead-light"><tr>' +
-            '<th scope="col" style="width: 10%">Add</th><th scope="col" style="width: 90%">Student</th>' +
-            '</tr></thead>\n' +
-            '<tbody>' +
-            '</tbody>' +
-            '</table></div>';
+    function showQuestions(question, index) {
+        let classname = 'q' + index;
+        let questionView = '<tr><div class="question' + index + '">' +
+            '<div style="margin-top: 20px"> <div style="display: inline;">' + question.questionDescription + '</div> <div style="display: inline; float: right;">' + question.questionType +'</div> </div>' +
+            '<table><tbody>';
+
+        switch (question.questionType) {
+            case "Yes/No":
+                questionView += yesNo(question.answers[0], classname);
+                // question.answers.forEach(function (answer) {
+                //     questionView += yesNo(answer, 'q' + index);
+                // });
+                break;
+            case "Single Choice":
+                question.answers.forEach(function (answer) {
+                    questionView += singleChoice(answer, classname);
+                });
+                break;
+            case "Multiple Choice":
+                question.answers.forEach(function (answer) {
+                    questionView += multipleChoice(answer);
+                });
+                break;
+        }
+
+        questionView += '</tbody></table></div></tr>';
+        return questionView;
     }
 
-    function question(answer) {
-
+    function yesNo(answer, classname) {
+        return '<tr><td class="' + classname + '"><input type="radio" id="yes' + answer.id + '" name="' + classname + '" value="Yes"><label for="yes' + answer.id + '">Yes</label></td></tr>' +
+            '<tr><td class="' + classname + '"><input type="radio" id="no' + answer.id + '" name="' + classname + '" value="Yes"><label for="no' + answer.id + '">No</label></td></tr>';
     }
 
-    function singleChoice(answer) {
-
+    function singleChoice(answer, classname) {
+        return '<tr><td class="' + classname + '"><input type="radio" id="' + answer.id + '" name="' + classname + '" value="Yes"><label for="' + answer.id + '">' + answer.value + '</label></td></tr>';
     }
 
-    function multipleChoice(answer) {
-
+    function multipleChoice(answer, classname) {
+        return '<tr><td class="' + classname + '"><input type="checkbox" id="' + answer.id + '" name="' + classname + '" value="Yes"><label for="' + answer.id + '">' + answer.value + '</label></td></tr>';
     }
 
     function disableProfile() {
