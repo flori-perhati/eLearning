@@ -196,7 +196,7 @@ $(document).ready(function () {
         let classname = 'q' + index;
         let questionView = '<table class="table" id="question' + index + '" style="margin-bottom: 50px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);"><thead><tr>' +
             '<th scope="col" style="width: 80%" questionId="' + question.id + '">' + question.questionDescription + '</th>' +
-            '<th scope="col" style="width: 20%; text-align: left" >' + question.questionPoints + ' point/s</th>' +
+            '<th scope="col" style="width: 20%; text-align: end" >' + question.questionPoints + ' point/s</th>' +
             '</tr></thead><tbody>';
 
         switch (question.questionType) {
@@ -223,16 +223,16 @@ $(document).ready(function () {
     }
 
     function yesNo(answer, classname) {
-        return '<tr><td class="' + classname + '"><input type="radio" id="yes' + answer.id + '" name="' + classname + '" value="Yes"><label for="yes' + answer.id + '">Yes</label></td></tr>' +
-            '<tr><td class="' + classname + '"><input type="radio" id="no' + answer.id + '" name="' + classname + '" value="Yes"><label for="no' + answer.id + '">No</label></td></tr>';
+        return '<tr><td class="' + classname + '"><input type="radio" id="yes' + answer.id + '" name="' + classname + '" value="Yes"><label for="yes' + answer.id + '">Yes</label></td><td></td></tr>' +
+            '<tr><td class="' + classname + '"><input type="radio" id="no' + answer.id + '" name="' + classname + '" value="Yes"><label for="no' + answer.id + '">No</label></td><td></td></tr>';
     }
 
     function singleChoice(answer, classname) {
-        return '<tr><td class="' + classname + '"><input type="radio" id="' + answer.id + '" name="' + classname + '" value="Yes"><label for="' + answer.id + '">' + answer.value + '</label></td></tr>';
+        return '<tr><td class="' + classname + '"><input type="radio" id="' + answer.id + '" name="' + classname + '" value="Yes"><label for="' + answer.id + '">' + answer.value + '</label></td><td></td></tr>';
     }
 
     function multipleChoice(answer, classname) {
-        return '<tr><td class="' + classname + '"><input type="checkbox" id="' + answer.id + '" name="' + classname + '" value="Yes"><label for="' + answer.id + '">' + answer.value + '</label></td></tr>';
+        return '<tr><td class="' + classname + '"><input type="checkbox" id="' + answer.id + '" name="' + classname + '" value="Yes"><label for="' + answer.id + '">' + answer.value + '</label></td><td></td></tr>';
     }
 
     function disableProfile() {
