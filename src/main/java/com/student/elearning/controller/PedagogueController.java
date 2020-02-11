@@ -28,21 +28,25 @@ public class PedagogueController {
 
     /**
      * Shows the view when pedagogue is logged in
-     * @param user [logged in] redirected from SignInController
      * @param model used for adding attributes to the view
      * @return pedagogue view or redirect to sign_in view is user isn't remembered
      */
     @RequestMapping("/pedagogue")
-    public String pedagogue(@ModelAttribute("pedagogue_user") User user, Model model) {
+    public String pedagogue(Model model) {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session =  attr.getRequest().getSession(true);
 
-        if (session.getAttribute("user_id") != null && session.getAttribute("user_status") != null && session.getAttribute("user_status").toString().equals("student")) {
+        if (session.getAttribute("user_id") != null && session.getAttribute("user_status") != null && session.getAttribute("user_status").toString().equals("pedagogue")) {
             long userId = Long.parseLong(session.getAttribute("user_id").toString());
-            return pedagogueView(model, userId);
-        } else if (user.getId() != 0)
-            return pedagogueView(model, user.getId());
-        else
+            Pedagogue pedagogue = pedagogueDao.pedagogueByUserId(userId);
+
+            model.addAttribute("pedagogue", pedagogue);
+            model.addAttribute("courses", courseDao.getCoursesByPedagogueId(pedagogue.getId()));
+            model.addAttribute("exams", examDao.examByPedagogue(pedagogue.getId()));
+            model.addAttribute("questions", questionDao.questionsByPedagogue(pedagogue.getId()));
+            model.addAttribute("faculties", facultyDao.getFaculties());
+            return "pedagogue";
+        } else
             return "redirect:/accounts/sign_in";
     }
 

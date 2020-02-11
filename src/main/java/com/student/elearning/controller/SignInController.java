@@ -38,27 +38,20 @@ public class SignInController {
      * Shows specific view based on user status
      * @param user represents user to be logged in
      * @param bindingResult used for validation
-     * @param rememberMe used for kepping user logged in
      * @param session used for to save user to session
-     * @param redirectAttributes used for redirecting attributes to another controller
      * @return to specific view for the logged user or sign_in view with warning message
      */
     @RequestMapping(value = "/accounts/sign_in/validate", method = RequestMethod.POST)
-    public String validateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam(value = "remember-me", defaultValue="false") boolean rememberMe, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String validateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, HttpSession session) {
         if (bindingResult.hasErrors()) {
             return "sign_in";
         } else {
             User loggedUser = userDao.validateUser(user, studentDao, pedagogueDao);
             if (loggedUser != null) {
-                if (rememberMe) {
-                    session.setAttribute("user_id", loggedUser.getId());
-                    session.setAttribute("username", loggedUser.getUsername());
-                    session.setAttribute("password", loggedUser.getPassword());
-                    session.setAttribute("user_status", loggedUser.getUserStatus());
-                    session.setAttribute("remember_me", true);
-                }
-
-                redirectAttributes.addFlashAttribute(loggedUser.getUserStatus() + "_user", loggedUser);
+                session.setAttribute("user_id", loggedUser.getId());
+                session.setAttribute("username", loggedUser.getUsername());
+                session.setAttribute("password", loggedUser.getPassword());
+                session.setAttribute("user_status", loggedUser.getUserStatus());
                 return "redirect:/" + loggedUser.getUserStatus();
             } else
                 return "redirect:/accounts/sign_in/user_does_not_exist";

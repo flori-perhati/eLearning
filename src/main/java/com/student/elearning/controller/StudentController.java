@@ -38,14 +38,16 @@ public class StudentController {
     public String viewData(@ModelAttribute("student_user") User user, Model model) {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session =  attr.getRequest().getSession(true);
-        return studentView(model, 3);
-//        if (session.getAttribute("user_id") != null && session.getAttribute("user_status") != null && session.getAttribute("user_status").toString().equals("student")) {
-//            long userId = Long.parseLong(session.getAttribute("user_id").toString());
-//            return studentView(model, userId);
-//        } else if (user.getId() != 0)
-//            return studentView(model, user.getId());
-//        else
-//            return "redirect:/accounts/sign_in";
+        if (session.getAttribute("user_id") != null && session.getAttribute("user_status") != null && session.getAttribute("user_status").toString().equals("student")) {
+            long userId = Long.parseLong(session.getAttribute("user_id").toString());
+            Student student = studentDao.studentByUserId(userId);
+
+            model.addAttribute("student", student);
+            model.addAttribute("courses", studentCourseDao.getCoursesByStudentId(student.getId()));
+            model.addAttribute("examResults", new ArrayList<>());
+            return "student";
+        } else
+            return "redirect:/accounts/sign_in";
     }
 
     /**
@@ -114,14 +116,5 @@ public class StudentController {
     public String delete(@PathVariable int id) {
         studentDao.updateStatus(0, id);
         return "redirect:/admin";
-    }
-
-    private String studentView(Model model, long userId) {
-        Student student = studentDao.studentByUserId(userId);
-
-        model.addAttribute("student", student);
-        model.addAttribute("courses", studentCourseDao.getCoursesByStudentId(student.getId()));
-        model.addAttribute("examResults", new ArrayList<>());
-        return "student";
     }
 }

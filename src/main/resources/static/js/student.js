@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    hideLoader();
+    // hideLoader();
     let header = $('#window-header');
 
     let studentForm = $('#student-profile');
@@ -53,6 +53,8 @@ $(document).ready(function () {
         studentForm.show();
         courseTable.hide();
         exams.hide();
+        examForm.hide();
+        $('#course-exams').hide();
         // warning.html("");
     });
 
@@ -61,6 +63,9 @@ $(document).ready(function () {
 
         studentForm.hide();
         courseTable.show();
+        exams.hide();
+        examForm.hide();
+        $('#course-exams').show();
         // warning.html("");
     });
 
@@ -70,6 +75,8 @@ $(document).ready(function () {
         studentForm.hide();
         courseTable.hide();
         exams.hide();
+        examForm.hide();
+        $('#course-exams').hide();
         // warning.html("");
     });
 
@@ -118,7 +125,7 @@ $(document).ready(function () {
     });
 
     courseTable.on("click", "td", function() {
-        showLoader();
+        // showLoader();
         exams.show();
         course.html($(this).closest('tr').attr("val1") + ' Exams');
 
@@ -142,7 +149,7 @@ $(document).ready(function () {
                 examError.show();
                 examError.html(response);
             }
-            hideLoader();
+            // hideLoader();
         }).fail(function(e) {
             console.log(e);
         });
@@ -161,15 +168,18 @@ $(document).ready(function () {
             if (response.responseCode === 200) {
                 exams.hide();
                 $('#course-exams').hide();
+
                 examForm.show();
-                alert(response.responseMessage);
                 $('#exam-header').html(response.t.header);
                 $('#exam-description').html(response.t.description);
                 let index = 1;
+                let l = "";
                 response.t.examQuestions.forEach(function (examQuestion) {
-                    $('#question-table tbody').append(showQuestions(examQuestion, index));
+                    // $('#question-table tbody').append(showQuestions(examQuestion, index));
+                    l += showQuestions(examQuestion, index);
                     index++;
                 });
+                $('#question-container').html(l);
                 $('#questions-number').attr('nr', index);
             } else
                 alert(response.responseMessage);
@@ -179,14 +189,15 @@ $(document).ready(function () {
     });
 
     /**
-     * Private methods | Radio event listener
+     * Private methods | Radio event listener class="question'+ index + '"
      */
 
     function showQuestions(question, index) {
         let classname = 'q' + index;
-        let questionView = '<tr><div class="question' + index + '">' +
-            '<div style="margin-top: 20px"> <div style="display: inline;">' + question.questionDescription + '</div> <div style="display: inline; float: right;">' + question.questionType +'</div> </div>' +
-            '<table><tbody>';
+        let questionView = '<table class="table" id="question' + index + '" style="margin-bottom: 50px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);"><thead><tr>' +
+            '<th scope="col" style="width: 80%" questionId="' + question.id + '">' + question.questionDescription + '</th>' +
+            '<th scope="col" style="width: 20%; text-align: left" >' + question.questionPoints + ' point/s</th>' +
+            '</tr></thead><tbody>';
 
         switch (question.questionType) {
             case "Yes/No":
@@ -207,7 +218,7 @@ $(document).ready(function () {
                 break;
         }
 
-        questionView += '</tbody></table></div></tr>';
+        questionView += '</tbody></table>';
         return questionView;
     }
 
@@ -241,11 +252,11 @@ $(document).ready(function () {
             '</tr>';
     }
 
-    function hideLoader() {
-        $("#preloader").css("display", "none");
-    }
-
-    function showLoader() {
-        $("#preloader").css("display", "block");
-    }
+    // function hideLoader() {
+    //     $("#preloader").css("display", "none");
+    // }
+    //
+    // function showLoader() {
+    //     $("#preloader").css("display", "block");
+    // }
 });

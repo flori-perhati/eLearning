@@ -26,20 +26,20 @@ public class AdminController {
 
     /**
      * Shows the view when admin is logged in
-     * @param user [logged in] redirected from SignInController
      * @param model used for adding attributes to the view
      * @return admin view or redirect to sign_in view is user isn't remembered
      */
     @RequestMapping("/admin")
-    public String adminView(@ModelAttribute("admin_user") User user, Model model) {
+    public String adminView(Model model) {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session =  attr.getRequest().getSession(true);
 
-        if (session.getAttribute("user_status") != null && session.getAttribute("user_status").toString().equals("admin"))
-            return adminView(model);
-        else if (user.getId() != 0)
-            return adminView(model);
-        else
+        if (session.getAttribute("user_status") != null && session.getAttribute("user_status").toString().equals("admin")) {
+            model.addAttribute("faculties", facultyDao.getFaculties());
+            model.addAttribute("students", studentDao.getStudents());
+            model.addAttribute("pedagogues", pedagogueDao.getPedagogues());
+            return "admin";
+        } else
             return "redirect:/accounts/sign_in";
     }
 
@@ -53,12 +53,5 @@ public class AdminController {
         HttpSession session =  attr.getRequest().getSession(true);
         session.invalidate();
         return "redirect:/accounts/sign_in";
-    }
-
-    private String adminView(Model model) {
-        model.addAttribute("faculties", facultyDao.getFaculties());
-        model.addAttribute("students", studentDao.getStudents());
-        model.addAttribute("pedagogues", pedagogueDao.getPedagogues());
-        return "admin";
     }
 }

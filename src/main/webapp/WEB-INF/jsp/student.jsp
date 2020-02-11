@@ -135,13 +135,16 @@
                 </tbody>
             </table>
 
+            <div id="question-container">
+
+            </div>
+
             <button id="submit-exam" type="submit" style="float: right; width: 20%">Submit</button>
         </form>
 
-<%--        <div id="loader"></div>--%>
-        <div id="preloader">
-            <div id="loader"></div>
-        </div>
+<%--        <div id="preloader">--%>
+<%--            <div id="loader"></div>--%>
+<%--        </div>--%>
     </div>
 </div>
 
