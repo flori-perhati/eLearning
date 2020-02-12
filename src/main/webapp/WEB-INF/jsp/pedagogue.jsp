@@ -11,6 +11,7 @@
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Our Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/style5.css"/>">
     <%--        <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css"/>">--%>
@@ -114,7 +115,7 @@
 
         <table id="course-table" class="table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
             <thead class="thead-light"><tr>
-                <th scope="col">Course Description</th><th scope="col">Actions</th>
+                <th scope="col">Course Description</th><th scope="col">Add Students</th>
             </tr></thead>
             <tbody>
             <c:forEach var="course" items="${courses}">
@@ -129,7 +130,7 @@
         </table>
 
         <form id="add-students" class="login-block" method="post" style="width: 50%;margin-top: 50px">
-            <div><h1 style="display: inline">Add Students</h1> <a id="hide-student-form"><i class="fa fa-close" style="display: inline;font-size:20px;color:#7386D5;float: right"></i></a></div>
+            <div><h1 style="display: inline">Add Students</h1> <a id="hide-student-form" style="display: inline;"><i class="fa fa-close" style="font-size:20px;color:#7386D5;float: right"></i></a></div>
             <div id="selected-course" style="margin-top:20px; margin-bottom: 20px"></div>
 
             <table class="table" id="students-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
