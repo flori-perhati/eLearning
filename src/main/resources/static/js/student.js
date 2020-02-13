@@ -135,6 +135,7 @@ $(document).ready(function () {
     });
 
     courseTable.on("click", "td", function() {
+        course.html($(this).closest('tr').attr("val1") + ' Exams');
         $.ajax({
             type: "GET",
             contentType: "application/json",
@@ -145,7 +146,6 @@ $(document).ready(function () {
             $("#exam-table tbody").empty();
             if (response.responseCode === 200) {
                 exams.show();
-                course.html($(this).closest('tr').attr("val1") + ' Exams');
                 examTable.show();
                 examError.hide();
                 $("#exam-table tbody").empty();
@@ -165,7 +165,7 @@ $(document).ready(function () {
 
     examTable.on("click", "td", function() {
         header.html('Exam');
-        $('#exam-course').html('<b>' + $('#course').text().substring(0, $('#course').text().length - 6) + '</b>');
+        $('#exam-course').html('<b>' + course.text().substring(0, course.text().length - 6) + '</b>');
         $.ajax({
             type: "GET",
             contentType: "application/json",

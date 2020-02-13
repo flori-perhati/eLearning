@@ -190,8 +190,6 @@ $(document).ready(function () {
         // warning.html("");
     });
 
-
-
     /**
      * Form submit
      */
@@ -518,7 +516,7 @@ $(document).ready(function () {
             '<td>' + exam.header +'</td>' +
             '<td>' + exam.description +'</td>' +
             '<td>' +
-            '<a examId="' + exam.id + '" class="exam-results"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>' +
+            '<a examId="' + exam.id + '" class="exam-results" style="color: #6d7fcc"><i><u>Results</u></i></a>' +
             '</td>' +
             '</tr>';
     }
