@@ -1,20 +1,17 @@
 package com.student.elearning.entity;
 
-import java.util.Date;
-
 public class ExamTaken {
 
     private long id;
     private long examId;
     private long studentId;
     private long pedagogueId;
-    private Date holdingDate;
-    private double result;
-    private double totalPoints;
+    private String holdingDate;
+    private String result;
 
-    private Exam exam;
-    private Student student;
-    private Pedagogue pedagogue;
+    private String course;
+    private String examHeader;
+    private String examDescription;
 
     public long getId() {
         return id;
@@ -48,27 +45,43 @@ public class ExamTaken {
         this.pedagogueId = pedagogueId;
     }
 
-    public Date getHoldingDate() {
+    public String getHoldingDate() {
         return holdingDate;
     }
 
-    public void setHoldingDate(Date holdingDate) {
+    public void setHoldingDate(String holdingDate) {
         this.holdingDate = holdingDate;
     }
 
-    public double getResult() {
+    public String getResult() {
         return result;
     }
 
-    public void setResult(double result) {
+    public void setResult(String result) {
         this.result = result;
     }
 
-    public double getTotalPoints() {
-        return totalPoints;
+    public String getCourse() {
+        return course;
     }
 
-    public void setTotalPoints(double totalPoints) {
-        this.totalPoints = totalPoints;
+    public void setCourse(String course) {
+        this.course = course;
+    }
+
+    public String getExamHeader() {
+        return examHeader;
+    }
+
+    public void setExamHeader(String examHeader) {
+        this.examHeader = examHeader;
+    }
+
+    public String getExamDescription() {
+        return examDescription;
+    }
+
+    public void setExamDescription(String examDescription) {
+        this.examDescription = examDescription;
     }
 }

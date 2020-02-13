@@ -126,9 +126,10 @@
         </div>
 
         <form id="exam-form" class="login-block" method="post" style="width: 75%;margin-top: 50px">
-            <h1 style="text-align: center" id="exam-header"></h1>
-            <div id="exam-description" style="margin-top:20px; margin-bottom: 20px"></div>
-            <div style="margin-top:20px; margin-bottom: 20px" id="questions-number" >Questions</div>
+            <div><h1 style="text-align: center; font-size: 24px" id="exam-header"></h1><a id="hide-exam" style="display: inline; color: red; float: right"><i><u>Close</u></i></a></div>
+            <div id="exam-description" style="margin-top:20px; font-size: 20px;"></div>
+            <div id="exam-course" style="margin-bottom: 20px; font-size: 20px;"></div>
+            <div style="margin-top:20px; margin-bottom: 20px; font-size: 18px;" id="questions-number" >Questions</div>
 
             <table id="question-table" class="table" style="margin-top: 20px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
                 <tbody>
@@ -141,6 +142,23 @@
 
             <button id="submit-exam" type="submit" style="float: right; width: 20%">Submit</button>
         </form>
+
+        <table id="results-table" class="table" style="float: left; width: 100%; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+            <thead class="thead-light"><tr>
+                <th scope="col">Course</th><th scope="col">Exam Header</th><th scope="col">Description</th><th scope="col">Date</th><th scope="col" style="width: 15%; text-align: right">Result</th>
+            </tr></thead>
+            <tbody>
+            <c:forEach var="examTaken" items="${examTakenLists}">
+                <tr class="course-row"">
+                    <td>${examTaken.course}</td>
+                    <td>${examTaken.examHeader}</td>
+                    <td>${examTaken.examDescription}</td>
+                    <td>${examTaken.holdingDate}</td>
+                    <td style="width: 15%; text-align: right">${examTaken.result}</td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
 
 <%--        <div id="preloader">--%>
 <%--            <div id="loader"></div>--%>

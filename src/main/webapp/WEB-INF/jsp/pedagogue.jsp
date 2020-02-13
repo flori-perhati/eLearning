@@ -129,8 +129,8 @@
             </tbody>
         </table>
 
-        <form id="add-students" class="login-block" method="post" style="width: 50%;margin-top: 50px">
-            <div><h1 style="display: inline">Add Students</h1> <a id="hide-student-form" style="display: inline;"><i class="fa fa-close" style="font-size:20px;color:#7386D5;float: right"></i></a></div>
+        <form id="add-students" class="login-block" method="post" style="width: 50%;margin-top: 50px;float: left;">
+            <div><h1 style="display: inline">Add Students</h1> <a id="hide-student-form" style="display: inline; color: red; float: right"><i><u>Close</u></i></a></div>
             <div id="selected-course" style="margin-top:20px; margin-bottom: 20px"></div>
 
             <table class="table" id="students-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
@@ -155,7 +155,7 @@
                     <td>${exam.header}</td>
                     <td>${exam.description}</td>
                     <td>
-                        <a examId="${exam.id}" class="exam-results"><i class="fa fa-plus" style="font-size:20px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i></a>
+                        <a examId="${exam.id}" class="exam-results" style="color: #6d7fcc"><i><u>Results</u></i></a>
                     </td>
                 </tr>
             </c:forEach>

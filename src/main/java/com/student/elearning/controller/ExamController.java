@@ -1,14 +1,8 @@
 package com.student.elearning.controller;
 
 import com.google.gson.Gson;
-import com.student.elearning.dao.AnswerDao;
-import com.student.elearning.dao.CourseDao;
-import com.student.elearning.dao.ExamDao;
-import com.student.elearning.dao.ExamQuestionDao;
-import com.student.elearning.entity.Course;
-import com.student.elearning.entity.Exam;
-import com.student.elearning.entity.ExamQuestion;
-import com.student.elearning.entity.Question;
+import com.student.elearning.dao.*;
+import com.student.elearning.entity.*;
 import com.student.elearning.network.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,6 +18,7 @@ public class ExamController {
     @Autowired CourseDao courseDao;
     @Autowired AnswerDao answerDao;
     @Autowired ExamDao examDao;
+    @Autowired ExamTakenDao examTakenDao;
     @Autowired ExamQuestionDao examQuestionDao;
 
     /**
@@ -89,10 +84,18 @@ public class ExamController {
      */
     @ResponseBody
     @RequestMapping(value = "/exam/details", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String examDetails(@RequestParam("examId") long examId) {
+    public String examDetails(@RequestParam("examId") long examId, @RequestParam("studentId") long studentId) {
         Response<Exam> response = new Response<>();
 
         Exam exam = examDao.examById(examId);
+        ExamTaken examTaken = examTakenDao.getExamTakenByStudent(examId, studentId);
+        if (examTaken != null) {
+            response.setResponseCode(0);
+            response.setResponseMessage("You have taken this exam!");
+            response.setT(exam);
+            return new Gson().toJson(response);
+        }
+
         if (exam != null) {
             List<ExamQuestion> examQuestions = examQuestionDao.examQuestionByExamId(exam.getId(), answerDao);
             if (!examQuestions.isEmpty()) {
@@ -102,6 +105,25 @@ public class ExamController {
                 response.setT(exam);
                 return new Gson().toJson(response);
             }
+        }
+
+        response.setResponseCode(500);
+        response.setResponseMessage("Internal Server Error");
+        response.setT(null);
+        return new Gson().toJson(response);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/examTaken/insert", method = RequestMethod.POST, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String postExam(@RequestBody ExamTaken examTaken) {
+        Response<ExamTaken> response = new Response<>();
+
+        if (examTakenDao.insert(examTaken)) {
+            response.setResponseCode(200);
+            response.setResponseMessage("OK");
+            response.setT(examTakenDao.lastExamTakenByStudent(examTaken.getStudentId()));
+            return new Gson().toJson(response);
         }
 
         response.setResponseCode(500);

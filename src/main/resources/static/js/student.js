@@ -7,6 +7,7 @@ $(document).ready(function () {
     let exams = $('#exams');
     let examTable = $('#exam-table');
     let examForm = $('#exam-form');
+    let resultsTable = $('#results-table');
 
     let firstName = $('#student-first-name');
     let lastName = $('#student-last-name');
@@ -23,6 +24,7 @@ $(document).ready(function () {
     courseTable.hide();
     exams.hide();
     examForm.hide();
+    resultsTable.hide();
 
     $("#answer-label").hide();
 
@@ -55,6 +57,7 @@ $(document).ready(function () {
         exams.hide();
         examForm.hide();
         $('#course-exams').hide();
+        resultsTable.hide();
         // warning.html("");
     });
 
@@ -66,7 +69,13 @@ $(document).ready(function () {
         exams.hide();
         examForm.hide();
         $('#course-exams').show();
+        resultsTable.hide();
         // warning.html("");
+    });
+
+    $('#hide-exam').click(function () {
+        examForm.hide();
+        $('#course-exams').show();
     });
 
     $('#results').click(function () {
@@ -77,6 +86,7 @@ $(document).ready(function () {
         exams.hide();
         examForm.hide();
         $('#course-exams').hide();
+        resultsTable.show();
         // warning.html("");
     });
 
@@ -125,10 +135,6 @@ $(document).ready(function () {
     });
 
     courseTable.on("click", "td", function() {
-        // showLoader();
-        exams.show();
-        course.html($(this).closest('tr').attr("val1") + ' Exams');
-
         $.ajax({
             type: "GET",
             contentType: "application/json",
@@ -138,6 +144,8 @@ $(document).ready(function () {
         }).done(function(response){
             $("#exam-table tbody").empty();
             if (response.responseCode === 200) {
+                exams.show();
+                course.html($(this).closest('tr').attr("val1") + ' Exams');
                 examTable.show();
                 examError.hide();
                 $("#exam-table tbody").empty();
@@ -147,7 +155,7 @@ $(document).ready(function () {
             } else {
                 examTable.hide();
                 examError.show();
-                examError.html(response);
+                examError.text(response.responseMessage);
             }
             // hideLoader();
         }).fail(function(e) {
@@ -155,32 +163,129 @@ $(document).ready(function () {
         });
     });
 
-    // TODO
     examTable.on("click", "td", function() {
         header.html('Exam');
+        $('#exam-course').html('<b>' + $('#course').text().substring(0, $('#course').text().length - 6) + '</b>');
         $.ajax({
             type: "GET",
             contentType: "application/json",
             url: "/exam/details",
-            data: {examId: $(this).closest('tr').attr("val")},
+            data: {examId: $(this).closest('tr').attr("val"), studentId: $('#submit-student').val()},
             dataType: 'json'
         }).done(function(response){
             if (response.responseCode === 200) {
                 exams.hide();
+                $('#question-container').html("");
                 $('#course-exams').hide();
-
                 examForm.show();
-                $('#exam-header').html(response.t.header);
-                $('#exam-description').html(response.t.description);
-                let index = 1;
+
+                $('#exam-header').attr('examId', response.t.id);
+                $('#exam-header').attr('pedagogueId', response.t.pedagogueId);
+                $('#exam-header').html('<b>' + response.t.header + '</b>');
+                $('#exam-description').html('<b>' + response.t.description + '</b>');
+
+                let index = 0;
                 let l = "";
                 response.t.examQuestions.forEach(function (examQuestion) {
-                    // $('#question-table tbody').append(showQuestions(examQuestion, index));
                     l += showQuestions(examQuestion, index);
                     index++;
                 });
                 $('#question-container').html(l);
-                $('#questions-number').attr('nr', index);
+                $('#questions-number').attr('nrOfQuestions', index);
+            } else
+                alert(response.responseMessage);
+        }).fail(function(e) {
+            console.log(e);
+        });
+    });
+
+    examForm.submit(function(event) {
+        event.preventDefault();
+
+        let currentDate = new Date();
+        let months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+        let examTaken = {};
+        examTaken['examId'] = $('#exam-header').attr('examId');
+        examTaken['studentId'] = $('#submit-student').val();
+        examTaken['pedagogueId'] = $('#exam-header').attr('pedagogueId');
+        examTaken['holdingDate'] = currentDate.getDate() + '  ' + months[currentDate.getMonth()] + ' ' + currentDate.getFullYear();
+
+        let count = $('#questions-number').attr('nrOfQuestions');
+        let totalPoints = 0;
+        let studentPoints = 0;
+
+        for (let index = 0; index < count; index ++) {
+            let questionType = "";
+            let questionId = 0;
+            let questionPoints = 0;
+            let earnedPoints = 0;
+
+            $('table#question' + index + ' thead tr ').each(function(){
+                questionType = $(this).find('th.question-value').attr('questionType');
+                questionId = $(this).find('th.question-value').attr('questionId');
+                questionPoints = parseFloat($(this).find('th.question-points').text().substring(0, $(this).find('th.question-points').text().length - 8));
+            });
+
+            switch (questionType) {
+                case "Yes/No":
+                    $("table#question" + index + " tbody tr").each(function () {
+                        if ($(this).find('td.q'+ index +'').find('input[type="radio"]').is(':checked')) {
+                            if ($(this).find('td.a'+ index +'').attr('isCorrect') === 'true')
+                                earnedPoints = questionPoints;
+                        }
+                    });
+                    break;
+                case "Single Choice":
+                    $("table#question" + index + " tbody tr").each(function () {
+                        if ($(this).find('td.q'+ index +'').find('input[type="radio"]').is(':checked')) {
+                            if ($(this).find('td.a'+ index +'').attr('isCorrect') === 'true')
+                                earnedPoints = questionPoints;
+                        }
+                    });
+                    break;
+                case "Multiple Choice":
+
+                    let numberOfCorrectAnswers = 0;
+                    let studentsCorrectAnswers = 0;
+
+                    $("table#question" + index + " tbody tr").each(function () {
+                        if ($(this).find('td.a'+ index +'').attr('isCorrect') === 'true')
+                            numberOfCorrectAnswers += 1;
+
+                        let checkbox = $(this).find('td.q'+ index +'').find('input[type="checkbox"]');
+                        if (checkbox.is(':checked')) {
+                            if ($(this).find('td.a'+ index +'').attr('isCorrect') === 'true')
+                                studentsCorrectAnswers += 1;
+                        }
+                    });
+                    if (numberOfCorrectAnswers === 0) {
+                        if (studentsCorrectAnswers === 0)
+                            earnedPoints = questionPoints;
+                    } else {
+                        let correctAnswers = studentsCorrectAnswers / numberOfCorrectAnswers;
+                        earnedPoints = correctAnswers * questionPoints;
+                    }
+                    break;
+            }
+
+            totalPoints += questionPoints;
+            studentPoints += earnedPoints;
+        }
+        examTaken['result'] = studentPoints + '/' + totalPoints;
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/examTaken/insert",
+            data: JSON.stringify(examTaken),
+            dataType: 'json'
+        }).done(function(response){
+            if (response.responseCode === 200) {
+                examForm.hide();
+                $('#course-exams').show();
+                $('#results-table tbody').append(insertExamTakenRow(response.t));
+                alert('Exam finished, your result is: ' + response.t.result);
             } else
                 alert(response.responseMessage);
         }).fail(function(e) {
@@ -189,31 +294,28 @@ $(document).ready(function () {
     });
 
     /**
-     * Private methods | Radio event listener class="question'+ index + '"
+     * Private methods | Radio event listener
      */
 
     function showQuestions(question, index) {
-        let classname = 'q' + index;
-        let questionView = '<table class="table" id="question' + index + '" style="margin-bottom: 50px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);"><thead><tr>' +
-            '<th scope="col" style="width: 80%" questionId="' + question.id + '">' + question.questionDescription + '</th>' +
-            '<th scope="col" style="width: 20%; text-align: end" >' + question.questionPoints + ' point/s</th>' +
+        let questionView = '<table class="table" id="question' + index + '" style="margin-bottom: 50px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">' +
+            '<thead class="thead-light"><tr>' +
+            '<th scope="col" style="width: 80%" class="question-value" questionId="' + question.id + '" questionType="' + question.questionType + '">' + question.questionDescription + '</th>' +
+            '<th scope="col" style="width: 20%; text-align: end" class="question-points">' + question.questionPoints + ' point/s</th>' +
             '</tr></thead><tbody>';
 
         switch (question.questionType) {
             case "Yes/No":
-                questionView += yesNo(question.answers[0], classname);
-                // question.answers.forEach(function (answer) {
-                //     questionView += yesNo(answer, 'q' + index);
-                // });
+                questionView += yesNo(question.answers[0], index);
                 break;
             case "Single Choice":
                 question.answers.forEach(function (answer) {
-                    questionView += singleChoice(answer, classname);
+                    questionView += singleChoice(answer, index);
                 });
                 break;
             case "Multiple Choice":
                 question.answers.forEach(function (answer) {
-                    questionView += multipleChoice(answer);
+                    questionView += multipleChoice(answer, index);
                 });
                 break;
         }
@@ -222,17 +324,29 @@ $(document).ready(function () {
         return questionView;
     }
 
-    function yesNo(answer, classname) {
-        return '<tr><td class="' + classname + '"><input type="radio" id="yes' + answer.id + '" name="' + classname + '" value="Yes"><label for="yes' + answer.id + '">Yes</label></td><td></td></tr>' +
-            '<tr><td class="' + classname + '"><input type="radio" id="no' + answer.id + '" name="' + classname + '" value="Yes"><label for="no' + answer.id + '">No</label></td><td></td></tr>';
+    function yesNo(answer, index) {
+        let yes = false;
+        let no = false;
+
+        if (answer.value === 'Yes')
+            yes = true;
+        else if (answer.value === 'No')
+            no = true;
+
+        return '<tr><td class="q' + index + '"><input type="radio" id="yes' + answer.id + '" name="' + index + '" value="Yes"><label for="yes' + answer.id + '">Yes</label></td>' +
+            '<td class="a' + index + '" style="width: 20%; text-align: end" isCorrect="' + yes + '"></td></tr>' +
+            '<tr><td class="q' + index + '"><input type="radio" id="no' + answer.id + '" name="' + index + '" value="No"><label for="no' + answer.id + '">No</label></td>' +
+            '<td class="a' + index + '" style="width: 20%; text-align: end" isCorrect="' + no + '"></td></tr>';
     }
 
-    function singleChoice(answer, classname) {
-        return '<tr><td class="' + classname + '"><input type="radio" id="' + answer.id + '" name="' + classname + '" value="Yes"><label for="' + answer.id + '">' + answer.value + '</label></td><td></td></tr>';
+    function singleChoice(answer, index) {
+        return '<tr><td class="q' + index + '"><input type="radio" id="' + answer.id + '" name="' + index + '"><label for="' + answer.id + '">' + answer.value + '</label></td>' +
+            '<td class="a' + index + '" style="width: 20%; text-align: end" isCorrect="' + answer.isCorrect + '"></td></tr>';
     }
 
-    function multipleChoice(answer, classname) {
-        return '<tr><td class="' + classname + '"><input type="checkbox" id="' + answer.id + '" name="' + classname + '" value="Yes"><label for="' + answer.id + '">' + answer.value + '</label></td><td></td></tr>';
+    function multipleChoice(answer, index) {
+        return '<tr><td class="q' + index + '"><input type="checkbox" id="' + answer.id + '" name="' + index + '"><label for="' + answer.id + '">' + answer.value + '</label></td>' +
+            '<td class="a' + index + '" style="width: 20%; text-align: end" isCorrect="' + answer.isCorrect + '"></td></tr>';
     }
 
     function disableProfile() {
@@ -249,6 +363,16 @@ $(document).ready(function () {
         return '<tr val="' + exam.id + '">' +
             '<td class="description">' + exam.header + '</td>' +
             '<td class="description">' + exam.description + '</td>' +
+            '</tr>';
+    }
+
+    function insertExamTakenRow(examTaken) {
+        return '<tr>' +
+            '<td>' + examTaken.course +'</td>' +
+            '<td>' + examTaken.examHeader +'</td>' +
+            '<td>' + examTaken.examDescription +'</td>' +
+            '<td>' + examTaken.holdingDate +'</td>' +
+            '<td style="width: 15%; text-align: right">' + examTaken.result +'</td>' +
             '</tr>';
     }
 

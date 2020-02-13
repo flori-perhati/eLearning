@@ -1,6 +1,7 @@
 package com.student.elearning.controller;
 
 import com.google.gson.Gson;
+import com.student.elearning.dao.ExamTakenDao;
 import com.student.elearning.dao.StudentCourseDao;
 import com.student.elearning.dao.StudentDao;
 import com.student.elearning.dao.UserDao;
@@ -26,6 +27,7 @@ public class StudentController {
     /** Backend implementation of CRUD operation and other queries */
     @Autowired UserDao userDao;
     @Autowired StudentDao studentDao;
+    @Autowired ExamTakenDao examTakenDao;
     @Autowired StudentCourseDao studentCourseDao;
 
     /**
@@ -44,7 +46,7 @@ public class StudentController {
 
             model.addAttribute("student", student);
             model.addAttribute("courses", studentCourseDao.getCoursesByStudentId(student.getId()));
-            model.addAttribute("examResults", new ArrayList<>());
+            model.addAttribute("examTakenLists", examTakenDao.examsTakenByStudent(student.getId()));
             return "student";
         } else
             return "redirect:/accounts/sign_in";

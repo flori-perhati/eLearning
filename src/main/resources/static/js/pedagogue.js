@@ -156,6 +156,10 @@ $(document).ready(function () {
         });
     });
 
+    $('#hide-student-form').click(function () {
+        addStudentsForm.hide()
+    });
+
     $('#allQuestions').click(function () {
         header.html('All Questions');
 
