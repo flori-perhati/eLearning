@@ -3,18 +3,14 @@ package com.student.elearning.controller;
 import com.student.elearning.dao.FacultyDao;
 import com.student.elearning.dao.PedagogueDao;
 import com.student.elearning.dao.StudentDao;
-import com.student.elearning.entity.Pedagogue;
-import com.student.elearning.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 
 @Controller
 public class AdminController {

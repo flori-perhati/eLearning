@@ -1,17 +1,14 @@
 package com.student.elearning.dao;
 
-import com.student.elearning.mapper.QuestionMapper;
 import com.student.elearning.entity.Question;
+import com.student.elearning.mapper.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -66,17 +63,14 @@ public class QuestionDao extends JdbcDaoSupport {
         final AnswerDao answerDao = new AnswerDao(template.getDataSource());
         String sql = "SELECT * FROM question WHERE id = ?";
         Object[] params = new Object[] {id};
-        return template.query(sql, params, new RowMapper<Question>() {
-            @Override
-            public Question mapRow(ResultSet resultSet, int i) throws SQLException {
-                Question question = new Question();
-                question.setId(resultSet.getLong("id"));
-                question.setPedagogueId(resultSet.getLong("pedagogue_id"));
-                question.setValue(resultSet.getString("value"));
-                question.setQuestionType(resultSet.getString("question_type"));
-                question.setAnswers(answerDao.answersByQuestionId(question.getId()));
-                return question;
-            }
+        return template.query(sql, params, (resultSet, i) -> {
+            Question question = new Question();
+            question.setId(resultSet.getLong("id"));
+            question.setPedagogueId(resultSet.getLong("pedagogue_id"));
+            question.setValue(resultSet.getString("value"));
+            question.setQuestionType(resultSet.getString("question_type"));
+            question.setAnswers(answerDao.answersByQuestionId(question.getId()));
+            return question;
         });
     }
 }

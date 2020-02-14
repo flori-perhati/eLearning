@@ -44,7 +44,6 @@
                             <li><a id="addStudent">Add Student</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">Logout</a></li>
                 </ul>
             </nav>
 
@@ -86,7 +85,7 @@
                             <td>${pedagogue.user.username}</td>
                             <td>${pedagogue.user.password}</td>
                             <td>
-                                <a href='deletePedagogue/${pedagogue.id}' ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
+                                <a href='/pedagogue/delete/${pedagogue.id}' ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -107,7 +106,7 @@
                             <td>${student.user.username}</td>
                             <td>${student.user.password}</td>
                             <td>
-                                <a href='/deleteStudent/${student.id}' ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
+                                <a href='/student/delete/${student.id}' ><i class="fa fa-trash" style="font-size:20px;color:red;margin-left: 20px;"></i></a>
                             </td>
                         </tr>
                     </c:forEach>

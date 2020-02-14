@@ -80,4 +80,26 @@ public class ExamTakenDao extends JdbcDaoSupport {
         });
         return examTakenList != null && !examTakenList.isEmpty() ? examTakenList.get(0) : null;
     }
+
+    public List<ExamTaken> examResults(long examId) {
+        String sql = "SELECT et.*, s.first_name, s.last_name FROM exam_taken et " +
+                "LEFT JOIN student s ON s.id = et.student_id " +
+                "WHERE et.exam_id = ?";
+        Object[] params = new Object[] {examId};
+        return template.query(sql, params, resultSet -> {
+            List<ExamTaken> examList = new ArrayList<>();
+            while (resultSet.next()) {
+                ExamTaken examTaken = new ExamTaken();
+                examTaken.setId(resultSet.getLong("id"));
+                examTaken.setExamId(resultSet.getLong("exam_id"));
+                examTaken.setStudentId(resultSet.getLong("student_id"));
+                examTaken.setPedagogueId(resultSet.getLong("pedagogue_id"));
+                examTaken.setHoldingDate(resultSet.getString("holding_date"));
+                examTaken.setResult(resultSet.getString("result"));
+                examTaken.setStudent(resultSet.getString("first_name") + " " + resultSet.getString("last_name"));
+                examList.add(examTaken);
+            }
+            return examList;
+        });
+    }
 }

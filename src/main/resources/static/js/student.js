@@ -136,6 +136,7 @@ $(document).ready(function () {
 
     courseTable.on("click", "td", function() {
         course.html($(this).closest('tr').attr("val1") + ' Exams');
+        exams.show();
         $.ajax({
             type: "GET",
             contentType: "application/json",
@@ -145,7 +146,6 @@ $(document).ready(function () {
         }).done(function(response){
             $("#exam-table tbody").empty();
             if (response.responseCode === 200) {
-                exams.show();
                 examTable.show();
                 examError.hide();
                 $("#exam-table tbody").empty();

@@ -133,6 +133,8 @@
             <div><h1 style="display: inline">Add Students</h1> <a id="hide-student-form" style="display: inline; color: red; float: right"><i><u>Close</u></i></a></div>
             <div id="selected-course" style="margin-top:20px; margin-bottom: 20px"></div>
 
+            <div id="no-students" style="color: orangered"></div>
+
             <table class="table" id="students-table" style="box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
                 <thead class="thead-light"><tr>
                     <th scope="col" style="width: 10%">Add</th><th scope="col" style="width: 90%">Student</th>
@@ -155,12 +157,28 @@
                     <td>${exam.header}</td>
                     <td>${exam.description}</td>
                     <td>
-                        <a examId="${exam.id}" class="exam-results" style="color: #6d7fcc"><i><u>Results</u></i></a>
+                        <a examId="${exam.id}" course="${exam.course.description}" examHeader="${exam.header}" examDescription="${exam.description}" class="results" style="color: #6d7fcc"><i><u>Results</u></i></a>
                     </td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
+
+        <div id="results" class="login-block" style="width:50%; margin-top: 50px; float: left">
+            <div><h1 style="text-align: center; font-size: 24px" id="course-selected"></h1><a id="hide-results" style="display: inline; color: red; float: right"><i><u>Close</u></i></a></div>
+            <div id="ex-header" style="margin-top:20px; font-size: 20px;"></div>
+            <div id="ex-description" style="margin-bottom: 20px; font-size: 20px;"></div>
+
+            <div id="warning-message" style="color: orangered"></div>
+
+            <table id="results-table" class="table" style="width: 100%; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
+                <thead class="thead-light"><tr>
+                    <th scope="col" style="width: 40%;">Student</th><th scope="col" style="width: 40%;">Date</th><th scope="col" style="width: 20%; text-align: right">Result</th>
+                </tr></thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
 
         <form id="exam-form" class="login-block" method="post" style="width: 75%;margin-bottom: 60px">
             <h1>Create Exam</h1>

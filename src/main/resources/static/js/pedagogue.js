@@ -12,6 +12,7 @@ $(document).ready(function () {
     let questionTable = $('#question-table');
     let singleChoiceTable = $('#single-choice-table');
     let multipleChoiceTable = $('#multiple-choice-table');
+    let results = $('#results');
 
     let questionBlock = $('#yes-no');
 
@@ -37,6 +38,7 @@ $(document).ready(function () {
     questionBlock.hide();
     singleChoiceTable.hide();
     multipleChoiceTable.hide();
+    results.hide();
 
     $("#answer-label").hide();
 
@@ -72,6 +74,7 @@ $(document).ready(function () {
         examForm.hide();
         questionForm.hide();
         addStudentsForm.hide();
+        results.hide();
 
         // warning.html("");
     });
@@ -87,6 +90,7 @@ $(document).ready(function () {
         examForm.hide();
         questionForm.hide();
         addStudentsForm.hide();
+        results.hide();
 
         // warning.html("");
     });
@@ -108,6 +112,7 @@ $(document).ready(function () {
         examForm.hide();
         questionForm.hide();
         addStudentsForm.hide();
+        results.hide();
 
         // warning.html("");
     });
@@ -123,6 +128,7 @@ $(document).ready(function () {
         examForm.show();
         questionForm.hide();
         addStudentsForm.hide();
+        results.hide();
 
         // warning.html("");
 
@@ -158,6 +164,10 @@ $(document).ready(function () {
 
     $('#hide-student-form').click(function () {
         addStudentsForm.hide()
+    });
+
+    $('#hide-results').click(function () {
+        results.hide()
     });
 
     $('#allQuestions').click(function () {
@@ -422,6 +432,7 @@ $(document).ready(function () {
         $('#selected-course').text(description);
         addStudentsForm.show();
 
+        $("#students-table tbody").empty();
         $.ajax({
             type: "GET",
             contentType: "application/json",
@@ -430,22 +441,34 @@ $(document).ready(function () {
             dataType: 'json'
         }).done(function(response){
             if (response.responseCode === 200) {
-                $("#students-table tbody").empty();
+                $('#no-students').hide();
+                $('#students-table').show();
+
                 response.t.forEach(function (student) {
                     $('#students-table tbody').append(insertStudentRow(student));
                 });
-            } else
-                alert(response.responseMessage);
+            } else {
+                $('#students-table').hide();
+                $('#no-students').show();
+                $('#no-students').html(response.responseMessage);
+            }
         }).fail(function(e) {
             console.log(e);
         });
     });
 
     //TODO
-    $('.exam-results').click(function () {
+    $('.results').click(function () {
         let examId = $(this).attr("examId");
+        let course = $(this).attr("course");
+        let examHeader = $(this).attr("examHeader");
+        let examDescription = $(this).attr("examDescription");
 
-        // show results form
+        $('#course-selected').html(course);
+        $('#ex-header').html(examHeader);
+        $('#ex-description').html(examDescription);
+
+        results.show();
 
         $.ajax({
             type: "GET",
@@ -454,14 +477,18 @@ $(document).ready(function () {
             data: {examId: examId},
             dataType: 'json'
         }).done(function(response){
-            if (response === "There are no result for this exam!")
-                alert(response);
-            else {
-                $("#exam-result-table tbody").empty();
-                response.t.forEach(function (examResult) {
-                    // $('#students-table tbody').append(insertStudentRow(student));
-                    $('#exam-result-table tbody').append(insertExamResultRow(examResult));
+            if (response.responseCode === 200) {
+                $('#results-table').show();
+                $('#warning-message').hide();
+
+                $("#results-table tbody").empty();
+                response.t.forEach(function (examTaken) {
+                    $('#results-table tbody').append(insertResultRow(examTaken));
                 });
+            } else {
+                $('#results-table').hide();
+                $('#warning-message').show();
+                $('#warning-message').html(response.responseMessage);
             }
         }).fail(function(e) {
             console.log(e);
@@ -510,13 +537,21 @@ $(document).ready(function () {
             '</tr>';
     }
 
+    function insertResultRow(examTaken) {
+        return '<tr>' +
+            '<td style="width: 40%;">' + examTaken.student +'</td>' +
+            '<td style="width: 40%;">' + examTaken.holdingDate +'</td>' +
+            '<td style="width: 20%; text-align: right">' + examTaken.result +'</td>' +
+            '</tr>';
+    }
+
     function insertExamRow(exam) {
         return '<tr>' +
             '<td>' + exam.course.description +'</td>' +
             '<td>' + exam.header +'</td>' +
             '<td>' + exam.description +'</td>' +
             '<td>' +
-            '<a examId="' + exam.id + '" class="exam-results" style="color: #6d7fcc"><i><u>Results</u></i></a>' +
+            '<a examId="' + exam.id + '" course="'+ exam.course.description + '" examHeader="' + exam.header + '" examDescription="' + exam.description + '" class="results" style="color: #6d7fcc"><i><u>Results</u></i></a>' +
             '</td>' +
             '</tr>';
     }

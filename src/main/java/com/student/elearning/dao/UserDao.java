@@ -1,8 +1,7 @@
 package com.student.elearning.dao;
 
-import com.student.elearning.entity.Student;
-import com.student.elearning.mapper.UserMapper;
 import com.student.elearning.entity.User;
+import com.student.elearning.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
@@ -69,13 +68,6 @@ public class UserDao extends JdbcDaoSupport {
     public User lastUser() {
         String sql = "SELECT TOP 1 * FROM users ORDER BY id DESC";
         List<User> users = template.query(sql, new UserMapper());
-        return users.isEmpty() ? null : users.get(0);
-    }
-
-    public User getUserById(long id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
-        Object[] params = new Object[] {id};
-        List<User> users = template.query(sql, params, new UserMapper());
         return users.isEmpty() ? null : users.get(0);
     }
 }

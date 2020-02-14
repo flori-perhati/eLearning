@@ -80,6 +80,7 @@ public class ExamController {
     /**
      * Provides exam details to client side
      * @param examId used for getting exam details
+     * @param studentId used for checking if student has already taken this exam
      * @return json response
      */
     @ResponseBody
@@ -105,6 +106,35 @@ public class ExamController {
                 response.setT(exam);
                 return new Gson().toJson(response);
             }
+        }
+
+        response.setResponseCode(500);
+        response.setResponseMessage("Internal Server Error");
+        response.setT(null);
+        return new Gson().toJson(response);
+    }
+
+    /**
+     * Provides exam results to client side
+     * @param examId used for getting exam details
+     * @return json response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/exam/results", method = RequestMethod.GET, headers="Content-Type=application/json", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String examResults(@RequestParam("examId") long examId) {
+        Response<List<ExamTaken>> response = new Response<>();
+
+        List<ExamTaken> examTakenList = examTakenDao.examResults(examId);
+        if (examTakenList != null) {
+            if (examTakenList.isEmpty()) {
+                response.setResponseCode(204);
+                response.setResponseMessage("No content");
+            } else {
+                response.setResponseCode(200);
+                response.setResponseMessage("OK");
+            }
+            response.setT(examTakenList);
+            return new Gson().toJson(response);
         }
 
         response.setResponseCode(500);

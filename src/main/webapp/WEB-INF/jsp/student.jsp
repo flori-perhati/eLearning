@@ -131,11 +131,6 @@
             <div id="exam-course" style="margin-bottom: 20px; font-size: 20px;"></div>
             <div style="margin-top:20px; margin-bottom: 20px; font-size: 18px;" id="questions-number" >Questions</div>
 
-            <table id="question-table" class="table" style="margin-top: 20px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);">
-                <tbody>
-                </tbody>
-            </table>
-
             <div id="question-container">
 
             </div>

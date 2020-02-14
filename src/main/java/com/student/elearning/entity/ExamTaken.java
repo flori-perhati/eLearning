@@ -10,6 +10,7 @@ public class ExamTaken {
     private String result;
 
     private String course;
+    private String student;
     private String examHeader;
     private String examDescription;
 
@@ -67,6 +68,14 @@ public class ExamTaken {
 
     public void setCourse(String course) {
         this.course = course;
+    }
+
+    public String getStudent() {
+        return student;
+    }
+
+    public void setStudent(String student) {
+        this.student = student;
     }
 
     public String getExamHeader() {

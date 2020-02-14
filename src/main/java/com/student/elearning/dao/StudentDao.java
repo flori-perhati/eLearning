@@ -1,22 +1,16 @@
 package com.student.elearning.dao;
 
-import com.student.elearning.entity.Pedagogue;
-import com.student.elearning.mapper.StudentMapper;
 import com.student.elearning.entity.Faculty;
 import com.student.elearning.entity.Student;
 import com.student.elearning.entity.User;
+import com.student.elearning.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,75 +64,35 @@ public class StudentDao extends JdbcDaoSupport {
                 "LEFT JOIN users u ON u.id = s.user_id " +
                 "LEFT JOIN faculty f ON f.id = s.faculty_id WHERE s.user_id = ?";
         Object[] params = new Object[] {userId};
-        return template.queryForObject(sql, params, new RowMapper<Student>() {
-            @Override
-            public Student mapRow(ResultSet resultSet, int i) throws SQLException {
-                Student student = new Student();
-                Faculty faculty = new Faculty();
-                User user = new User();
+        return template.queryForObject(sql, params, (resultSet, i) -> {
+            Student student = new Student();
+            Faculty faculty = new Faculty();
+            User user = new User();
 
-                student.setId(resultSet.getInt("id"));
-                student.setUserId(resultSet.getInt("user_id"));
-                student.setFacultyId(resultSet.getInt("faculty_id"));
-                student.setFirstName(resultSet.getString("first_name"));
-                student.setLastName(resultSet.getString("last_name"));
-                student.setGender(resultSet.getString("gender"));
-                student.setBirthdate(resultSet.getDate("birthdate"));
-                student.setRegistrationDate(resultSet.getDate("registration_date"));
-                student.setStatus(resultSet.getInt("status") == 1);
+            student.setId(resultSet.getInt("id"));
+            student.setUserId(resultSet.getInt("user_id"));
+            student.setFacultyId(resultSet.getInt("faculty_id"));
+            student.setFirstName(resultSet.getString("first_name"));
+            student.setLastName(resultSet.getString("last_name"));
+            student.setGender(resultSet.getString("gender"));
+            student.setBirthdate(resultSet.getDate("birthdate"));
+            student.setRegistrationDate(resultSet.getDate("registration_date"));
+            student.setStatus(resultSet.getInt("status") == 1);
 
-                user.setId(resultSet.getInt("user_id"));
-                user.setUsername(resultSet.getString("username"));
-                user.setPassword(resultSet.getString("password"));
-                user.setUserStatus(resultSet.getString("user_status"));
+            user.setId(resultSet.getInt("user_id"));
+            user.setUsername(resultSet.getString("username"));
+            user.setPassword(resultSet.getString("password"));
+            user.setUserStatus(resultSet.getString("user_status"));
 
-                faculty.setId(resultSet.getInt("faculty_id"));
-                faculty.setDescription(resultSet.getString("description"));
+            faculty.setId(resultSet.getInt("faculty_id"));
+            faculty.setDescription(resultSet.getString("description"));
 
-                student.setFaculty(faculty);
-                student.setUser(user);
+            student.setFaculty(faculty);
+            student.setUser(user);
 
-                return student;
-            }
+            return student;
         });
     }
-
-    /*public Student studentDetailsToEdit(int id) {
-        String sql = "SELECT s.id, s.user_id, s.faculty_id, s.first_name, s.last_name, s.registration_date, " +
-                "u.username, u.password, u.user_status, f.description " +
-                "FROM student s " +
-                "LEFT JOIN users u ON u.id = s.user_id " +
-                "LEFT JOIN faculty f ON f.id = s.faculty_id WHERE s.id = ?";
-        Object[] params = new Object[] {id};
-        return template.queryForObject(sql, params, new RowMapper<Student>() {
-            @Override
-            public Student mapRow(ResultSet resultSet, int i) throws SQLException {
-                Student student = new Student();
-                Faculty faculty = new Faculty();
-                User user = new User();
-
-                student.setId(resultSet.getInt("id"));
-                student.setUserId(resultSet.getInt("user_id"));
-                student.setFacultyId(resultSet.getInt("faculty_id"));
-                student.setFirstName(resultSet.getString("first_name"));
-                student.setLastName(resultSet.getString("last_name"));
-                student.setRegistrationDate(resultSet.getDate("registration_date"));
-
-                user.setId(resultSet.getInt("user_id"));
-                user.setUsername(resultSet.getString("username"));
-                user.setPassword(resultSet.getString("password"));
-                user.setUserStatus(resultSet.getString("user_status"));
-
-                faculty.setId(resultSet.getInt("faculty_id"));
-                faculty.setDescription(resultSet.getString("description"));
-
-                student.setFaculty(faculty);
-                student.setUser(user);
-
-                return student;
-            }
-        });
-    }*/
 
     public List<Student> getStudents() {
         String sql = "SELECT s.id, s.user_id, s.faculty_id, s.first_name, s.last_name, s.registration_date, " +
@@ -148,36 +102,34 @@ public class StudentDao extends JdbcDaoSupport {
                 "LEFT JOIN faculty f ON f.id = s.faculty_id " +
                 "WHERE s.status = 1";
 
-        return template.query(sql, new ResultSetExtractor<List<Student>>() {
-            public List<Student> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                List<Student> students = new ArrayList<>();
-                while(resultSet.next()) {
-                    Student student = new Student();
-                    Faculty faculty = new Faculty();
-                    User user = new User();
+        return template.query(sql, resultSet -> {
+            List<Student> students = new ArrayList<>();
+            while(resultSet.next()) {
+                Student student = new Student();
+                Faculty faculty = new Faculty();
+                User user = new User();
 
-                    student.setId(resultSet.getInt("id"));
-                    student.setUserId(resultSet.getInt("user_id"));
-                    student.setFacultyId(resultSet.getInt("faculty_id"));
-                    student.setFirstName(resultSet.getString("first_name"));
-                    student.setLastName(resultSet.getString("last_name"));
-                    student.setRegistrationDate(resultSet.getDate("registration_date"));
+                student.setId(resultSet.getInt("id"));
+                student.setUserId(resultSet.getInt("user_id"));
+                student.setFacultyId(resultSet.getInt("faculty_id"));
+                student.setFirstName(resultSet.getString("first_name"));
+                student.setLastName(resultSet.getString("last_name"));
+                student.setRegistrationDate(resultSet.getDate("registration_date"));
 
-                    user.setId(resultSet.getInt("user_id"));
-                    user.setUsername(resultSet.getString("username"));
-                    user.setPassword(resultSet.getString("password"));
-                    user.setUserStatus(resultSet.getString("user_status"));
+                user.setId(resultSet.getInt("user_id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setPassword(resultSet.getString("password"));
+                user.setUserStatus(resultSet.getString("user_status"));
 
-                    faculty.setId(resultSet.getInt("faculty_id"));
-                    faculty.setDescription(resultSet.getString("description"));
+                faculty.setId(resultSet.getInt("faculty_id"));
+                faculty.setDescription(resultSet.getString("description"));
 
-                    student.setFaculty(faculty);
-                    student.setUser(user);
+                student.setFaculty(faculty);
+                student.setUser(user);
 
-                    students.add(student);
-                }
-                return students;
+                students.add(student);
             }
+            return students;
         });
     }
 
@@ -193,7 +145,7 @@ public class StudentDao extends JdbcDaoSupport {
                 student.setFirstName(resultSet.getString("first_name"));
                 student.setLastName(resultSet.getString("last_name"));
 
-                if (studentCourseDao.studentCourses(student.getId(), courseId).isEmpty())
+                if (!studentCourseDao.studentCourseExist(courseId, student.getId()))
                     students.add(student.setCourseId(courseId));
             }
             return students;
@@ -203,36 +155,34 @@ public class StudentDao extends JdbcDaoSupport {
     public List<Student> studentsByCourse(long courseId) {
         String sql = "SELECT * FROM student_course WHERE course_id = ?";
         Object[] params = new Object[] {courseId};
-        return template.query(sql, params, new ResultSetExtractor<List<Student>>() {
-            public List<Student> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                List<Student> students = new ArrayList<Student>();
-                while(resultSet.next()) {
-                    Student student = new Student();
-                    Faculty faculty = new Faculty();
-                    User user = new User();
+        return template.query(sql, params, resultSet -> {
+            List<Student> students = new ArrayList<Student>();
+            while(resultSet.next()) {
+                Student student = new Student();
+                Faculty faculty = new Faculty();
+                User user = new User();
 
-                    student.setId(resultSet.getInt("id"));
-                    student.setUserId(resultSet.getInt("user_id"));
-                    student.setFacultyId(resultSet.getInt("faculty_id"));
-                    student.setFirstName(resultSet.getString("first_name"));
-                    student.setLastName(resultSet.getString("last_name"));
-                    student.setRegistrationDate(resultSet.getDate("registration_date"));
+                student.setId(resultSet.getInt("id"));
+                student.setUserId(resultSet.getInt("user_id"));
+                student.setFacultyId(resultSet.getInt("faculty_id"));
+                student.setFirstName(resultSet.getString("first_name"));
+                student.setLastName(resultSet.getString("last_name"));
+                student.setRegistrationDate(resultSet.getDate("registration_date"));
 
-                    user.setId(resultSet.getInt("user_id"));
-                    user.setUsername(resultSet.getString("username"));
-                    user.setPassword(resultSet.getString("password"));
-                    user.setUserStatus(resultSet.getString("user_status"));
+                user.setId(resultSet.getInt("user_id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setPassword(resultSet.getString("password"));
+                user.setUserStatus(resultSet.getString("user_status"));
 
-                    faculty.setId(resultSet.getInt("faculty_id"));
-                    faculty.setDescription(resultSet.getString("description"));
+                faculty.setId(resultSet.getInt("faculty_id"));
+                faculty.setDescription(resultSet.getString("description"));
 
-                    student.setFaculty(faculty);
-                    student.setUser(user);
+                student.setFaculty(faculty);
+                student.setUser(user);
 
-                    students.add(student);
-                }
-                return students;
+                students.add(student);
             }
+            return students;
         });
     }
 
@@ -244,38 +194,36 @@ public class StudentDao extends JdbcDaoSupport {
                 "LEFT JOIN faculty f ON f.id = s.faculty_id " +
                 "ORDER BY s.id DESC";
 
-        return template.query(sql, new ResultSetExtractor<List<Student>>() {
-            public List<Student> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                List<Student> students = new ArrayList<Student>();
-                while(resultSet.next()) {
-                    Student student = new Student();
-                    Faculty faculty = new Faculty();
-                    User user = new User();
+        return template.query(sql, resultSet -> {
+            List<Student> students = new ArrayList<Student>();
+            while(resultSet.next()) {
+                Student student = new Student();
+                Faculty faculty = new Faculty();
+                User user = new User();
 
-                    student.setId(resultSet.getInt("id"));
-                    student.setUserId(resultSet.getInt("user_id"));
-                    student.setFacultyId(resultSet.getInt("faculty_id"));
-                    student.setFirstName(resultSet.getString("first_name"));
-                    student.setLastName(resultSet.getString("last_name"));
-                    student.setGender(resultSet.getString("gender"));
-                    student.setBirthdate(resultSet.getDate("birthdate"));
-                    student.setRegistrationDate(resultSet.getDate("registration_date"));
+                student.setId(resultSet.getInt("id"));
+                student.setUserId(resultSet.getInt("user_id"));
+                student.setFacultyId(resultSet.getInt("faculty_id"));
+                student.setFirstName(resultSet.getString("first_name"));
+                student.setLastName(resultSet.getString("last_name"));
+                student.setGender(resultSet.getString("gender"));
+                student.setBirthdate(resultSet.getDate("birthdate"));
+                student.setRegistrationDate(resultSet.getDate("registration_date"));
 
-                    user.setId(resultSet.getInt("user_id"));
-                    user.setUsername(resultSet.getString("username"));
-                    user.setPassword(resultSet.getString("password"));
-                    user.setUserStatus(resultSet.getString("user_status"));
+                user.setId(resultSet.getInt("user_id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setPassword(resultSet.getString("password"));
+                user.setUserStatus(resultSet.getString("user_status"));
 
-                    faculty.setId(resultSet.getInt("faculty_id"));
-                    faculty.setDescription(resultSet.getString("description"));
+                faculty.setId(resultSet.getInt("faculty_id"));
+                faculty.setDescription(resultSet.getString("description"));
 
-                    student.setFaculty(faculty);
-                    student.setUser(user);
+                student.setFaculty(faculty);
+                student.setUser(user);
 
-                    students.add(student);
-                }
-                return students;
+                students.add(student);
             }
+            return students;
         }).get(0);
     }
 }

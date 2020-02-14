@@ -118,16 +118,5 @@ public class PedagogueController {
         pedagogueDao.updateStatus(0, id);
         return "redirect:/admin";
     }
-
-    private String pedagogueView(Model model, long userId) {
-        Pedagogue pedagogue = pedagogueDao.pedagogueByUserId(userId);
-
-        model.addAttribute("pedagogue", pedagogue);
-        model.addAttribute("courses", courseDao.getCoursesByPedagogueId(pedagogue.getId()));
-        model.addAttribute("exams", examDao.examByPedagogue(pedagogue.getId()));
-        model.addAttribute("questions", questionDao.questionsByPedagogue(pedagogue.getId()));
-        model.addAttribute("faculties", facultyDao.getFaculties());
-        return "pedagogue";
-    }
 }
 

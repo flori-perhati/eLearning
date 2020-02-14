@@ -1,9 +1,7 @@
 package com.student.elearning.dao;
 
 import com.student.elearning.entity.Course;
-import com.student.elearning.entity.Exam;
 import com.student.elearning.mapper.CourseMapper;
-import com.student.elearning.mapper.ExamMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

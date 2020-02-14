@@ -8,7 +8,6 @@ import com.student.elearning.dao.UserDao;
 import com.student.elearning.entity.Student;
 import com.student.elearning.entity.User;
 import com.student.elearning.network.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 
 @Controller
 @RequestMapping("")
